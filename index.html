@@ -204,14 +204,13 @@
         </div>
 
         <!-- Cards Per Row Slider Controller -->
-        <div id="cols-controller-row" class="flex items-center justify-between pt-2.5 border-t border-divider text-xs gap-3">
-          <div class="flex items-center gap-2 text-secondary min-w-0">
-            <i data-lucide="columns-3" class="w-3.5 h-3.5 accent-text shrink-0"></i>
-            <span class="font-semibold text-primary shrink-0">Kartu per Baris:</span>
-            <span id="cols-val-text" class="font-mono accent-text font-bold text-xs shrink-0">4 Kartu</span>
+        <div id="cols-controller-row" class="flex flex-col sm:flex-row sm:items-center justify-between pt-3 border-t border-divider text-xs gap-2 sm:gap-3">
+          <div class="flex items-center justify-between sm:justify-start gap-2 text-secondary">
+            <span class="font-semibold text-primary flex items-center gap-1.5"><i data-lucide="columns-3" class="w-3.5 h-3.5 accent-text shrink-0"></i> Kartu per Baris:</span>
+            <span id="cols-val-text" class="font-mono accent-text font-bold text-xs bg-surface px-2 py-0.5 rounded-md border border-glass">4 Kartu</span>
           </div>
 
-          <div class="flex items-center gap-2 max-w-[200px] w-full">
+          <div class="flex items-center gap-2.5 w-full sm:w-52 shrink-0">
             <span class="text-[10px] text-tertiary font-mono">1</span>
             <input type="range" id="grid-cols-slider" min="1" max="6" value="4" step="1" class="w-full accent-range cursor-pointer" oninput="setGridColumns(this.value)" />
             <span class="text-[10px] text-tertiary font-mono">6</span>

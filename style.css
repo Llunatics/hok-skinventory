@@ -957,35 +957,40 @@ dialog.modal[open] .glass-modal {
   box-shadow: 0 2px 10px var(--accent-20);
 }
 
+#items-grid {
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 /* 1. POSTER MODE — HoK Full Vertical Poster Card */
 #items-grid[data-layout="poster"] {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
-  gap: 20px;
+  gap: 16px;
 }
 @media (max-width: 640px) {
   #items-grid[data-layout="poster"] {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 10px;
   }
 }
 
 #items-grid[data-layout="poster"] .skin-card {
   position: relative !important;
   overflow: hidden !important;
-  height: 380px !important;
+  aspect-ratio: 3 / 5.2 !important;
+  height: auto !important;
+  min-height: 240px !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: flex-end !important;
   border-radius: 24px !important;
   background: var(--bg-surface) !important;
   border: 1px solid var(--glass-border) !important;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 @media (max-width: 640px) {
   #items-grid[data-layout="poster"] .skin-card {
-    height: 330px !important;
-    border-radius: 20px !important;
+    border-radius: 18px !important;
+    min-height: 210px !important;
   }
 }
 
