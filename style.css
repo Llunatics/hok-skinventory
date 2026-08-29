@@ -507,17 +507,31 @@ body {
 
 .skin-card-placeholder-icon { font-size: 2rem; position: relative; z-index: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
 
-/* Card owned state */
-.skin-card.owned { opacity: 0.65; }
-.skin-card.owned:hover { opacity: 1; }
+/* Card owned state - Visibilitas Jelas di View Poster & Grid */
+.skin-card.owned {
+  opacity: 1 !important;
+  border-color: rgba(16, 185, 129, 0.35) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), 0 0 12px rgba(16, 185, 129, 0.15) !important;
+}
+
+.skin-card.owned .skin-card-img img {
+  filter: brightness(0.72) saturate(0.85) !important;
+  transition: filter 0.3s ease, transform 0.6s ease !important;
+}
+
+.skin-card.owned:hover .skin-card-img img {
+  filter: brightness(0.95) saturate(1) !important;
+}
 
 .owned-badge {
   position: absolute; top: 12px; right: 12px; z-index: 10;
   padding: 4px 10px; border-radius: 9999px; font-size: 10px; font-weight: 700;
-  color: #10b981; background: rgba(16,185,129,0.15);
-  backdrop-filter: blur(12px); border: 1px solid rgba(16,185,129,0.25);
+  color: #10b981; background: rgba(16,185,129,0.2);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(16,185,129,0.35);
   display: flex; align-items: center; gap: 4px;
   letter-spacing: 0.04em; text-transform: uppercase;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 /* Card body */
