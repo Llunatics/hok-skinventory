@@ -911,7 +911,149 @@ dialog.modal[open] .glass-modal {
   color: var(--accent);
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.upload-zone-content i {
-  transition: transform 0.25s ease;
+/* ───────────── LAYOUT SWITCHER & CARD MODES ───────────── */
+
+.glass-pill-bg {
+  background: var(--input-bg);
 }
+
+.layout-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 9px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.layout-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-surface-hover);
+}
+.layout-btn.active {
+  color: var(--accent-text-on);
+  background: var(--accent);
+  box-shadow: 0 2px 10px var(--accent-20);
+}
+
+/* 1. POSTER MODE — HoK Full Vertical Poster Card */
+#items-grid[data-layout="poster"] {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+  gap: 20px;
+}
+@media (max-width: 640px) {
+  #items-grid[data-layout="poster"] {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+#items-grid[data-layout="poster"] .skin-card {
+  height: 380px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-radius: 24px;
+}
+
+@media (max-width: 640px) {
+  #items-grid[data-layout="poster"] .skin-card {
+    height: 310px;
+    border-radius: 20px;
+  }
+}
+
+#items-grid[data-layout="poster"] .skin-card-img,
+#items-grid[data-layout="poster"] .skin-card-placeholder {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  border-radius: 24px;
+}
+
+#items-grid[data-layout="poster"] .skin-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#items-grid[data-layout="poster"] .skin-card-img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--bg-modal) 0%, rgba(7,7,15,0.7) 48%, rgba(0,0,0,0.15) 100%);
+  pointer-events: none;
+}
+
+#items-grid[data-layout="poster"] .skin-card-body {
+  position: relative;
+  z-index: 10;
+  padding: 16px;
+  background: transparent;
+}
+
+#items-grid[data-layout="poster"] .skin-card-hero {
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  opacity: 0.9;
+}
+
+#items-grid[data-layout="poster"] .skin-card-name {
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1.25;
+  margin-top: 2px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+}
+
+/* 2. LIST MODE — Compact Horizontal Layout */
+#items-grid[data-layout="list"] {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#items-grid[data-layout="list"] .skin-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: auto;
+  padding: 12px 18px;
+  border-radius: 20px;
+}
+
+#items-grid[data-layout="list"] .skin-card-img,
+#items-grid[data-layout="list"] .skin-card-placeholder {
+  position: relative;
+  inset: auto;
+  width: 76px;
+  height: 76px;
+  border-radius: 16px;
+  flex-shrink: 0;
+}
+
+#items-grid[data-layout="list"] .skin-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0 0 16px;
+  gap: 16px;
+  background: transparent;
+}
+
+#items-grid[data-layout="list"] .skin-card-footer {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+  gap: 14px;
+}
+
 

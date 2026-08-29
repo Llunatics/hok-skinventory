@@ -183,6 +183,22 @@
               <option value="priority">Prioritas</option>
               <option value="name">Nama A-Z</option>
             </select>
+
+            <!-- Layout View Switcher -->
+            <div class="flex items-center gap-1 p-1 rounded-xl glass-pill-bg border border-glass">
+              <button id="layout-btn-poster" class="layout-btn active" title="Tampilan Poster Vertical (HoK Style)" onclick="setLayout('poster')">
+                <i data-lucide="rectangle-vertical" class="w-3.5 h-3.5"></i>
+                <span class="hidden sm:inline text-xs font-semibold">Poster</span>
+              </button>
+              <button id="layout-btn-grid" class="layout-btn" title="Tampilan Grid Standard" onclick="setLayout('grid')">
+                <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
+                <span class="hidden sm:inline text-xs font-semibold">Grid</span>
+              </button>
+              <button id="layout-btn-list" class="layout-btn" title="Tampilan List Ringkas" onclick="setLayout('list')">
+                <i data-lucide="list" class="w-3.5 h-3.5"></i>
+                <span class="hidden sm:inline text-xs font-semibold">List</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>

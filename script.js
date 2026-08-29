@@ -42,10 +42,22 @@ const STATUSES = {
   expired:   { label: 'Tidak Tersedia', cssClass: 'sb-expired' },
 };
 
+let currentLayout = localStorage.getItem('hokvault-layout') || 'poster';
+
+function setLayout(mode) {
+  currentLayout = mode;
+  localStorage.setItem('hokvault-layout', mode);
+  document.querySelectorAll('.layout-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`layout-btn-${mode}`)?.classList.add('active');
+  const grid = document.getElementById('items-grid');
+  if (grid) grid.setAttribute('data-layout', mode);
+}
+
 // ---- Init ----
 document.addEventListener('DOMContentLoaded', () => {
   loadData();
   loadTheme();
+  setLayout(currentLayout);
   renderItems();
   updateStats();
   spawnParticles();
@@ -300,6 +312,7 @@ function getFilteredItems() {
 // ---- Rendering ----
 function renderItems() {
   const grid = document.getElementById('items-grid');
+  if (grid) grid.setAttribute('data-layout', currentLayout);
   const emptyState = document.getElementById('empty-state');
   const noResults = document.getElementById('no-results-state');
   const filtered = getFilteredItems();
@@ -693,3 +706,6 @@ document.addEventListener('keydown', (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); document.getElementById('search-input').focus(); }
   if ((e.ctrlKey || e.metaKey) && e.key === 'n') { e.preventDefault(); openAddModal(); }
 });
+
+// Expose Layout Switcher globally
+window.setLayout = setLayout;
