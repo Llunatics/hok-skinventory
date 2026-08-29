@@ -66,7 +66,6 @@ function setLayout(mode) {
 function setGridColumns(cols) {
   const c = parseInt(cols) || 4;
   currentGridCols = c;
-  localStorage.setItem('hokvault-grid-cols', c);
 
   const valText = document.getElementById('cols-val-text');
   if (valText) valText.textContent = `${c} Kartu`;
@@ -82,7 +81,11 @@ function setGridColumns(cols) {
       gridEl.style.gridTemplateColumns = `repeat(${c}, minmax(0, 1fr))`;
     }
   }
+}
 
+function saveGridColumns(cols) {
+  const c = parseInt(cols) || 4;
+  localStorage.setItem('hokvault-grid-cols', c);
   if (window.pushWishlistToCloud) window.pushWishlistToCloud();
 }
 
@@ -860,6 +863,7 @@ document.addEventListener('keydown', (e) => {
 // Expose Layout, Framing, Columns & Theme Switchers globally
 window.setLayout = setLayout;
 window.setGridColumns = setGridColumns;
+window.saveGridColumns = saveGridColumns;
 window.updateCropPreview = updateCropPreview;
 window.resetFramingControls = resetFramingControls;
 window.applyScheme = applyScheme;

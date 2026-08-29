@@ -212,7 +212,7 @@
 
           <div class="flex items-center gap-2.5 w-full sm:w-52 shrink-0">
             <span class="text-[10px] text-tertiary font-mono">1</span>
-            <input type="range" id="grid-cols-slider" min="1" max="6" value="4" step="1" class="w-full accent-range cursor-pointer" oninput="setGridColumns(this.value)" />
+            <input type="range" id="grid-cols-slider" min="1" max="6" value="4" step="1" class="w-full accent-range cursor-pointer" oninput="setGridColumns(this.value)" onchange="saveGridColumns(this.value)" />
             <span class="text-[10px] text-tertiary font-mono">6</span>
           </div>
         </div>
