@@ -203,24 +203,12 @@
           </div>
         </div>
 
-        <!-- Cards Per Row Slider Controller -->
-        <div id="cols-controller-row" class="pt-3 border-t border-divider space-y-2.5">
-          <div class="flex items-center justify-between text-xs px-0.5">
-            <span class="font-semibold text-primary flex items-center gap-1.5">
-              <i data-lucide="columns-3" class="w-3.5 h-3.5 accent-text shrink-0"></i> Kartu per Baris
-            </span>
-            <span id="cols-val-text" class="font-mono accent-text font-bold text-xs bg-surface px-2.5 py-0.5 rounded-full border border-glass">4 Kartu</span>
-          </div>
-
-          <!-- Ultra-Clean Liquid Glass Range Slider Bar -->
-          <div class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-input border border-glass">
-            <span class="text-xs font-mono text-tertiary font-bold shrink-0">1</span>
-            <input type="range" id="grid-cols-slider" min="1" max="6" value="4" step="1"
-                   class="liquid-slider w-full cursor-pointer"
-                   oninput="setGridColumns(this.value)"
-                   onchange="saveGridColumns(this.value)" />
-            <span class="text-xs font-mono text-tertiary font-bold shrink-0">6</span>
-          </div>
+        <!-- Minimalist Cards Per Row Slider -->
+        <div id="cols-controller-row" class="pt-3 border-t border-divider px-1">
+          <input type="range" id="grid-cols-slider" min="1" max="6" value="4" step="1"
+                 class="liquid-slider w-full cursor-pointer"
+                 oninput="setGridColumns(this.value)"
+                 onchange="saveGridColumns(this.value)" />
         </div>
       </div>
 
