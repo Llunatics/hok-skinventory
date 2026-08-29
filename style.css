@@ -917,13 +917,15 @@ dialog.modal[open] .glass-modal {
 .layout-switcher-bar {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
   padding: 3px;
   height: 42px;
   border-radius: 14px;
   background: var(--input-bg);
   border: 1px solid var(--glass-border);
   box-sizing: border-box;
+  overflow: hidden;
+  max-width: 100%;
 }
 
 .layout-btn {
@@ -932,7 +934,8 @@ dialog.modal[open] .glass-modal {
   justify-content: center;
   gap: 6px;
   height: 100%;
-  padding: 0 12px;
+  padding: 0 8px;
+  min-width: 0;
   border-radius: 10px;
   font-size: 13px;
   font-weight: 500;
@@ -1010,12 +1013,7 @@ dialog.modal[open] .glass-modal {
 }
 
 #items-grid[data-layout="poster"] .skin-card-img::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(7,7,15,0.85) 0%, transparent 40%);
-  pointer-events: none;
-  z-index: 2;
+  display: none !important;
 }
 
 #items-grid[data-layout="poster"] .skin-card-body {
