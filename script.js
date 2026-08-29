@@ -93,6 +93,9 @@ function loadData() {
 
 function saveData() {
   localStorage.setItem('hokvault-data', JSON.stringify(wishlist));
+  if (window.pushWishlistToCloud) {
+    window.pushWishlistToCloud();
+  }
 }
 
 // ---- Theme ----

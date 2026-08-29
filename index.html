@@ -89,6 +89,12 @@
           <input type="file" id="import-file" accept=".json" class="hidden" onchange="importData(event)" />
         </div>
 
+        <!-- Cloud Sync Button -->
+        <button onclick="document.getElementById('cloud-modal').showModal()" class="glass-btn-ghost text-xs gap-1.5 px-3 py-2">
+          <i data-lucide="cloud" class="w-3.5 h-3.5 accent-text"></i>
+          <span id="cloud-status-text" class="hidden sm:inline">Cloud Sync</span>
+        </button>
+
         <button class="glass-btn-primary" onclick="openAddModal()">
           <i data-lucide="plus" class="w-4 h-4"></i>
           <span class="hidden sm:inline">Tambah Skin</span>
@@ -353,9 +359,66 @@
     <form method="dialog" class="modal-backdrop"><button>close</button></form>
   </dialog>
 
+  <!-- ===== CLOUD SYNC MODAL ===== -->
+  <dialog id="cloud-modal" class="modal modal-bottom sm:modal-middle">
+    <div class="glass-modal max-w-md">
+      <button class="glass-btn-icon absolute right-4 top-4 z-10" onclick="document.getElementById('cloud-modal').close()"><i data-lucide="x" class="w-4 h-4"></i></button>
+
+      <div class="flex items-center gap-3 mb-6">
+        <div class="modal-icon"><i data-lucide="cloud" class="w-5 h-5"></i></div>
+        <div>
+          <h3 class="modal-title">Cloud Database & Sync</h3>
+          <p class="modal-subtitle">Akses & sinkronkan wishlist kamu di semua HP/PC</p>
+        </div>
+      </div>
+
+      <!-- Logged Out View -->
+      <div id="cloud-user-logged-out" class="space-y-4">
+        <div class="p-4 rounded-2xl bg-surface border border-glass text-center space-y-3">
+          <p class="text-xs text-secondary leading-relaxed">Hubungkan dengan **Google Sign-In** untuk menyimpan wishlist kamu di Cloud Database Firebase secara gratis & real-time.</p>
+          <button onclick="loginGoogle()" class="glass-btn-primary w-full justify-center gap-2 py-2.5">
+            <i data-lucide="log-in" class="w-4 h-4"></i> Login dengan Google
+          </button>
+        </div>
+      </div>
+
+      <!-- Logged In View -->
+      <div id="cloud-user-logged-in" class="space-y-4 hidden">
+        <div class="flex items-center gap-3 p-3.5 rounded-2xl bg-surface border border-glass">
+          <img id="user-avatar" class="w-10 h-10 rounded-full border border-glass" src="" alt="Avatar" />
+          <div class="flex-1 min-w-0">
+            <h4 id="user-name" class="font-bold text-sm truncate">User Name</h4>
+            <p id="user-email" class="text-xs text-tertiary truncate">user@gmail.com</p>
+          </div>
+          <span class="badge-status status-available text-[10px]"><i data-lucide="check" class="w-3 h-3"></i> Cloud Synced</span>
+        </div>
+
+        <div class="flex gap-2 pt-2">
+          <button onclick="pushWishlistToCloud()" class="glass-btn-ghost flex-1 text-xs gap-1.5"><i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Sync Sekarang</button>
+          <button onclick="logoutGoogle()" class="glass-btn-ghost text-xs text-red-400 hover:text-red-300 gap-1.5"><i data-lucide="log-out" class="w-3.5 h-3.5"></i> Keluar</button>
+        </div>
+      </div>
+
+      <div class="mt-6 pt-4 border-t border-divider">
+        <details class="text-xs text-tertiary">
+          <summary class="cursor-pointer font-medium hover:text-primary transition-colors flex items-center gap-1">
+            <i data-lucide="settings" class="w-3.5 h-3.5"></i> Pengaturan Firebase Custom (Opsional)
+          </summary>
+          <div class="mt-3 space-y-2">
+            <p class="text-[11px] text-muted leading-relaxed">Masukkan JSON `firebaseConfig` kamu jika ingin memakai project Firebase milikmu sendiri:</p>
+            <textarea id="firebase-config-input" placeholder='{"apiKey": "...", "authDomain": "...", "projectId": "..."}' class="glass-input w-full h-20 text-[11px] font-mono resize-none"></textarea>
+            <button onclick="saveFirebaseConfig(document.getElementById('firebase-config-input').value)" class="glass-btn-ghost w-full py-1.5 text-xs">Simpan Custom Config</button>
+          </div>
+        </details>
+      </div>
+    </div>
+    <form method="dialog" class="modal-backdrop"><button>close</button></form>
+  </dialog>
+
   <!-- Toast -->
   <div id="toast-container" class="fixed bottom-6 right-6 z-[100] flex flex-col gap-2 items-end"></div>
 
   <script src="script.js"></script>
+  <script type="module" src="firebase-sync.js"></script>
 </body>
 </html>
