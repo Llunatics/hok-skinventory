@@ -19,14 +19,15 @@ import {
   getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// Default Firebase Configuration (Or Custom Config from localStorage)
+// Production Firebase Configuration for HoK Vault
 const DEFAULT_FIREBASE_CONFIG = {
-  apiKey: "AIzaSyDemoKeyForHoKVaultSync1234567",
+  apiKey: "AIzaSyCO0R6UwTdvKnSkr7lKSmyjDqMYEAAfwqw",
   authDomain: "hok-skinventory.firebaseapp.com",
   projectId: "hok-skinventory",
-  storageBucket: "hok-skinventory.appspot.com",
-  messagingSenderId: "1029384756",
-  appId: "1:1029384756:web:abcd1234efgh5678"
+  storageBucket: "hok-skinventory.firebasestorage.app",
+  messagingSenderId: "261643615076",
+  appId: "1:261643615076:web:ea40272c2555b9a3895871",
+  measurementId: "G-3JWM4W1PDB"
 };
 
 let firebaseApp = null;
