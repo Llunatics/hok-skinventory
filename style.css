@@ -972,17 +972,21 @@ dialog.modal[open] .glass-modal {
   }
 }
 
+.rarity-bar {
+  display: none !important;
+}
+
 /* Dynamic Poster Card Styling with Container Query Scaling */
 #items-grid[data-layout="poster"] .skin-card {
   position: relative !important;
   overflow: hidden !important;
   aspect-ratio: 3 / 5.2 !important;
   height: auto !important;
-  min-height: 180px !important;
+  min-height: 160px !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: flex-end !important;
-  border-radius: clamp(14px, 6cqi, 24px) !important;
+  border-radius: clamp(12px, 5cqi, 24px) !important;
   background: var(--bg-surface) !important;
   border: 1px solid var(--glass-border) !important;
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
@@ -991,8 +995,8 @@ dialog.modal[open] .glass-modal {
 
 @media (max-width: 640px) {
   #items-grid[data-layout="poster"] .skin-card {
-    border-radius: clamp(12px, 5cqi, 18px) !important;
-    min-height: 160px !important;
+    border-radius: clamp(10px, 4cqi, 18px) !important;
+    min-height: 140px !important;
   }
 }
 
@@ -1024,50 +1028,56 @@ dialog.modal[open] .glass-modal {
   left: 0 !important;
   right: 0 !important;
   z-index: 10 !important;
-  padding: clamp(16px, 12cqi, 28px) clamp(8px, 5cqi, 14px) clamp(8px, 5cqi, 14px) clamp(8px, 5cqi, 14px) !important;
+  padding: clamp(10px, 8cqi, 28px) clamp(6px, 4cqi, 14px) clamp(6px, 4cqi, 12px) clamp(6px, 4cqi, 14px) !important;
   background: linear-gradient(to top, rgba(5,5,12,0.98) 0%, rgba(5,5,12,0.85) 55%, rgba(5,5,12,0.3) 85%, transparent 100%) !important;
-  backdrop-filter: blur(2px) !important;
-  -webkit-backdrop-filter: blur(2px) !important;
+  backdrop-filter: blur(clamp(1px, 1.5cqi, 4px)) !important;
+  -webkit-backdrop-filter: blur(clamp(1px, 1.5cqi, 4px)) !important;
   border: none !important;
-  border-radius: 0 0 clamp(14px, 6cqi, 24px) clamp(14px, 6cqi, 24px) !important;
+  border-radius: 0 0 clamp(12px, 5cqi, 24px) clamp(12px, 5cqi, 24px) !important;
 }
 
 /* Dynamic Typography & Elements Scaling */
 #items-grid[data-layout="poster"] .skin-card-hero {
-  font-size: clamp(7.5px, 4cqi, 10px) !important;
+  font-size: clamp(6.5px, 3.8cqi, 10px) !important;
   font-weight: 800 !important;
-  letter-spacing: 0.06em !important;
+  letter-spacing: 0.05em !important;
   text-transform: uppercase !important;
   color: var(--accent-light) !important;
   text-shadow: 0 1px 4px rgba(0,0,0,0.95);
 }
 
 #items-grid[data-layout="poster"] .skin-card-name {
-  font-size: clamp(0.7rem, 6.5cqi, 1rem) !important;
+  font-size: clamp(0.65rem, 5.5cqi, 1rem) !important;
   font-weight: 800 !important;
-  line-height: 1.2 !important;
+  line-height: 1.15 !important;
   margin-top: 1px !important;
   color: #ffffff !important;
   text-shadow: 0 2px 8px rgba(0,0,0,0.95);
+  word-break: break-word !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
 }
 
 #items-grid[data-layout="poster"] .rarity-badge {
-  font-size: clamp(7px, 3.8cqi, 9.5px) !important;
-  padding: clamp(1px, 1cqi, 3px) clamp(4px, 2.5cqi, 8px) !important;
+  font-size: clamp(6.5px, 3.5cqi, 9.5px) !important;
+  padding: clamp(1px, 1cqi, 3px) clamp(3px, 2cqi, 8px) !important;
 }
 
 #items-grid[data-layout="poster"] .priority-dot {
-  width: clamp(5px, 2.5cqi, 7px) !important;
-  height: clamp(5px, 2.5cqi, 7px) !important;
+  width: clamp(4px, 2cqi, 7px) !important;
+  height: clamp(4px, 2cqi, 7px) !important;
 }
 
 #items-grid[data-layout="poster"] .skin-card-price {
-  font-size: clamp(8px, 4.5cqi, 11px) !important;
+  font-size: clamp(7.5px, 4cqi, 11px) !important;
 }
 
 #items-grid[data-layout="poster"] .glass-btn-icon {
-  width: clamp(24px, 12cqi, 32px) !important;
-  height: clamp(24px, 12cqi, 32px) !important;
+  width: clamp(20px, 10cqi, 32px) !important;
+  height: clamp(20px, 10cqi, 32px) !important;
 }
 
 #items-grid[data-layout="poster"] .rarity-bar {

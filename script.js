@@ -414,9 +414,8 @@ function renderCard(item) {
 
       <div class="skin-card-body">
         <div class="flex items-end justify-between gap-2 w-full">
-          <div class="min-w-0 flex-1">
             <div class="skin-card-hero">${escapeHtml(item.hero)}</div>
-            <div class="skin-card-name truncate">${escapeHtml(item.name)}</div>
+            <div class="skin-card-name">${escapeHtml(item.name && item.name.trim() ? item.name : item.hero)}</div>
             
             <div class="flex items-center gap-1.5 flex-wrap mt-1">
               <span class="rarity-badge rb-${item.rarity}">${rar.icon} ${rar.label}</span>
@@ -622,8 +621,8 @@ function saveItem(event) {
     image = document.getElementById('form-image').value.trim();
   }
 
-  if (!hero || !name) {
-    showToast('Nama hero dan skin wajib diisi', 'error');
+  if (!hero) {
+    showToast('Nama hero wajib diisi', 'error');
     return;
   }
 
