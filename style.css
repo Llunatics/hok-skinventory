@@ -993,7 +993,7 @@ dialog.modal[open] .glass-modal {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(7,7,15,0.95) 0%, rgba(7,7,15,0.65) 50%, rgba(0,0,0,0.15) 100%);
+  background: linear-gradient(to top, rgba(5,5,12,0.98) 0%, rgba(5,5,12,0.82) 48%, rgba(5,5,12,0.25) 75%, transparent 100%);
   pointer-events: none;
   z-index: 2;
 }
@@ -1001,26 +1001,31 @@ dialog.modal[open] .glass-modal {
 #items-grid[data-layout="poster"] .skin-card-body {
   position: relative !important;
   z-index: 10 !important;
-  padding: 16px !important;
-  background: transparent !important;
+  padding: 16px 14px 14px 14px !important;
+  background: linear-gradient(to top, var(--bg-modal) 0%, rgba(7,7,15,0.92) 80%, transparent 100%) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
   border: none !important;
   margin-top: auto !important;
+  border-radius: 0 0 24px 24px !important;
 }
 
 #items-grid[data-layout="poster"] .skin-card-hero {
   font-size: 11px;
-  letter-spacing: 0.5px;
-  opacity: 0.9;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
   color: var(--accent-light);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.9);
 }
 
 #items-grid[data-layout="poster"] .skin-card-name {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 800;
-  line-height: 1.25;
+  line-height: 1.2;
   margin-top: 2px;
   color: #ffffff;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.95);
 }
 
 /* 2. LIST MODE — Compact Horizontal Layout */
