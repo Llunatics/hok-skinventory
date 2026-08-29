@@ -344,6 +344,11 @@ function renderCard(item) {
   const hasImg = item.image && item.image.trim();
   const ownedCls = item.owned ? 'owned' : '';
 
+  const scale = (item.imageScale || 100) / 100;
+  const posX = item.imagePosX !== undefined ? item.imagePosX : 50;
+  const posY = item.imagePosY !== undefined ? item.imagePosY : (item.imagePos !== undefined ? item.imagePos : 15);
+  const imgStyle = `object-position: ${posX}% ${posY}%; transform: scale(${scale}); transform-origin: ${posX}% ${posY}%;`;
+
   return `
     <div class="skin-card ${ownedCls}" data-rarity="${item.rarity}" onclick="openDetail('${item.id}')">
       <div class="rarity-bar" data-r="${item.rarity}"></div>
@@ -352,7 +357,7 @@ function renderCard(item) {
 
       ${hasImg ? `
         <div class="skin-card-img">
-          <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" loading="lazy" style="object-position: center ${item.imagePos !== undefined ? item.imagePos : 15}%;"
+          <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" loading="lazy" style="${imgStyle}"
                onerror="this.closest('.skin-card-img').outerHTML='<div class=\\'skin-card-placeholder\\' data-r=\\'${item.rarity}\\'><span class=\\'skin-card-placeholder-icon\\'>${rar.icon}</span></div>'" />
         </div>
       ` : `
@@ -432,12 +437,48 @@ function updateStats() {
   document.getElementById('progress-bar').style.width = progress + '%';
 }
 
-function updateCropPreview(val) {
-  const v = val !== undefined ? parseInt(val) : (parseInt(document.getElementById('form-image-pos')?.value) || 15);
-  const posText = document.getElementById('pos-val-text');
-  if (posText) posText.textContent = `${v}% (${v < 35 ? 'Atas/Wajah' : v > 65 ? 'Bawah' : 'Tengah'})`;
+function updateCropPreview() {
+  const scaleEl = document.getElementById('form-image-scale');
+  const posYEl = document.getElementById('form-image-pos-y');
+  const posXEl = document.getElementById('form-image-pos-x');
+  
+  const scale = scaleEl ? parseInt(scaleEl.value) : 100;
+  const posY = posYEl ? parseInt(posYEl.value) : 15;
+  const posX = posXEl ? parseInt(posXEl.value) : 50;
+
+  const scaleText = document.getElementById('scale-val-text');
+  if (scaleText) scaleText.textContent = `${(scale / 100).toFixed(1)}x`;
+
+  const posYText = document.getElementById('pos-y-val-text');
+  if (posYText) posYText.textContent = `${posY}% (${posY < 35 ? 'Atas/Wajah' : posY > 65 ? 'Bawah' : 'Tengah'})`;
+
+  const posXText = document.getElementById('pos-x-val-text');
+  if (posXText) posXText.textContent = `${posX}% (${posX < 35 ? 'Kiri' : posX > 65 ? 'Kanan' : 'Tengah'})`;
+
   const imgEl = document.getElementById('image-preview-img');
-  if (imgEl) imgEl.style.objectPosition = `center ${v}%`;
+  if (imgEl) {
+    imgEl.style.objectPosition = `${posX}% ${posY}%`;
+    imgEl.style.transform = `scale(${scale / 100})`;
+    imgEl.style.transformOrigin = `${posX}% ${posY}%`;
+  }
+
+  // Update mock preview text
+  const heroInput = document.getElementById('form-hero')?.value.trim();
+  const nameInput = document.getElementById('form-name')?.value.trim();
+  const mockHero = document.getElementById('mock-preview-hero');
+  const mockName = document.getElementById('mock-preview-name');
+  if (mockHero) mockHero.textContent = heroInput ? heroInput.toUpperCase() : 'PREVIEW HERO';
+  if (mockName) mockName.textContent = nameInput ? nameInput : 'Preview Nama Skin';
+}
+
+function resetFramingControls() {
+  const scaleEl = document.getElementById('form-image-scale');
+  const posYEl = document.getElementById('form-image-pos-y');
+  const posXEl = document.getElementById('form-image-pos-x');
+  if (scaleEl) scaleEl.value = 100;
+  if (posYEl) posYEl.value = 15;
+  if (posXEl) posXEl.value = 50;
+  updateCropPreview();
 }
 
 // ---- CRUD ----
@@ -449,8 +490,7 @@ function openAddModal() {
   document.getElementById('form-rarity').value = 'epic';
   document.getElementById('form-priority').value = 'medium';
   document.getElementById('form-status').value = 'available';
-  document.getElementById('form-image-pos').value = 15;
-  updateCropPreview(15);
+  resetFramingControls();
   uploadedImageData = null;
   removeImagePreview();
   switchImageTab('url');
@@ -472,8 +512,13 @@ function editItem(id) {
   document.getElementById('form-priority').value = item.priority;
   document.getElementById('form-status').value = item.status || 'available';
   document.getElementById('form-notes').value = item.notes || '';
-  const pos = item.imagePos !== undefined ? item.imagePos : 15;
-  document.getElementById('form-image-pos').value = pos;
+
+  const scaleEl = document.getElementById('form-image-scale');
+  const posYEl = document.getElementById('form-image-pos-y');
+  const posXEl = document.getElementById('form-image-pos-x');
+  if (scaleEl) scaleEl.value = item.imageScale || 100;
+  if (posYEl) posYEl.value = item.imagePosY !== undefined ? item.imagePosY : (item.imagePos !== undefined ? item.imagePos : 15);
+  if (posXEl) posXEl.value = item.imagePosX !== undefined ? item.imagePosX : 50;
 
   // Handle image
   uploadedImageData = null;
@@ -488,7 +533,7 @@ function editItem(id) {
     document.getElementById('form-image').value = item.image || '';
     if (item.image) showImagePreview(item.image);
   }
-  updateCropPreview(pos);
+  updateCropPreview();
 
   document.getElementById('item-modal').showModal();
   lucide.createIcons();
@@ -505,7 +550,14 @@ function saveItem(event) {
   const priority = document.getElementById('form-priority').value;
   const status = document.getElementById('form-status').value;
   const notes = document.getElementById('form-notes').value.trim();
-  const imagePos = parseInt(document.getElementById('form-image-pos').value) || 15;
+
+  const scaleEl = document.getElementById('form-image-scale');
+  const posYEl = document.getElementById('form-image-pos-y');
+  const posXEl = document.getElementById('form-image-pos-x');
+
+  const imageScale = scaleEl ? parseInt(scaleEl.value) : 100;
+  const imagePosY = posYEl ? parseInt(posYEl.value) : 15;
+  const imagePosX = posXEl ? parseInt(posXEl.value) : 50;
 
   // Determine image source
   let image = '';
@@ -523,12 +575,12 @@ function saveItem(event) {
   if (id) {
     const idx = wishlist.findIndex(i => i.id === id);
     if (idx !== -1) {
-      wishlist[idx] = { ...wishlist[idx], hero, name, price, rarity, priority, status, image, imagePos, notes, updatedAt: new Date().toISOString() };
+      wishlist[idx] = { ...wishlist[idx], hero, name, price, rarity, priority, status, image, imageScale, imagePosY, imagePosX, notes, updatedAt: new Date().toISOString() };
       showToast('Skin berhasil diperbarui', 'success');
     }
   } else {
     wishlist.push({
-      id: generateId(), hero, name, price, rarity, priority, status, image, imagePos, notes,
+      id: generateId(), hero, name, price, rarity, priority, status, image, imageScale, imagePosY, imagePosX, notes,
       owned: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
     });
     showToast('Skin berhasil ditambahkan', 'success');
@@ -756,5 +808,6 @@ document.addEventListener('keydown', (e) => {
 // Expose Layout, Framing & Theme Switchers globally
 window.setLayout = setLayout;
 window.updateCropPreview = updateCropPreview;
+window.resetFramingControls = resetFramingControls;
 window.applyScheme = applyScheme;
 window.applyAccent = applyAccent;
