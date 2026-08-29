@@ -648,7 +648,19 @@ body {
 }
 
 @media (max-width: 640px) {
-  .glass-modal { border-radius: 28px 28px 0 0; }
+  .glass-modal { border-radius: 28px 28px 0 0 !important; padding: 22px 18px !important; }
+
+  /* Navbar Dropdown Mobile View Optimization */
+  .glass-nav .dropdown .dropdown-content {
+    position: fixed !important;
+    top: 68px !important;
+    left: 12px !important;
+    right: 12px !important;
+    width: auto !important;
+    max-width: calc(100vw - 24px) !important;
+    margin: 0 auto !important;
+    transform-origin: top center !important;
+  }
 }
 
 
