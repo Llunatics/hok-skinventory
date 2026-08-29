@@ -8,6 +8,8 @@ import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   signOut,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -47,6 +49,16 @@ function initFirebase() {
     auth = getAuth(firebaseApp);
     db = getFirestore(firebaseApp);
     googleProvider = new GoogleAuthProvider();
+
+    // Check redirect result for mobile browsers
+    getRedirectResult(auth).then((result) => {
+      if (result && result.user) {
+        currentUser = result.user;
+        if (window.showToast) window.showToast(`Selamat datang, ${currentUser.displayName}!`, 'success');
+      }
+    }).catch((err) => {
+      console.warn("Mobile redirect auth error:", err);
+    });
 
     // Listen to Auth State Changes
     onAuthStateChanged(auth, (user) => {
@@ -110,20 +122,38 @@ export async function pushWishlistToCloud() {
   }
 }
 
-// Login Google
+// Login Google (Supports Popup & Mobile Redirect)
 export async function loginGoogle() {
   if (!auth || !googleProvider) {
     if (window.showToast) window.showToast('Firebase belum terkonfigurasi', 'warning');
     return;
   }
+
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  if (isMobile) {
+    try {
+      await signInWithRedirect(auth, googleProvider);
+    } catch (err) {
+      console.error("Redirect login gagal:", err);
+      if (window.showToast) window.showToast('Login Google gagal', 'error');
+    }
+    return;
+  }
+
   try {
     const result = await signInWithPopup(auth, googleProvider);
     currentUser = result.user;
     if (window.showToast) window.showToast(`Selamat datang, ${currentUser.displayName}!`, 'success');
     closeCloudModal();
   } catch (err) {
-    console.error("Login Google gagal:", err);
-    if (window.showToast) window.showToast('Login Google dibatalkan atau gagal', 'error');
+    console.error("Login Google popup gagal, mencoba redirect...", err);
+    try {
+      await signInWithRedirect(auth, googleProvider);
+    } catch (redirectErr) {
+      console.error("Login Google redirect gagal:", redirectErr);
+      if (window.showToast) window.showToast('Login Google gagal', 'error');
+    }
   }
 }
 
