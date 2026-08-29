@@ -203,17 +203,21 @@
           </div>
         </div>
 
-        <!-- Cards Per Row Slider Controller -->
-        <div id="cols-controller-row" class="flex flex-col sm:flex-row sm:items-center justify-between pt-3 border-t border-divider text-xs gap-2 sm:gap-3">
-          <div class="flex items-center justify-between sm:justify-start gap-2 text-secondary">
-            <span class="font-semibold text-primary flex items-center gap-1.5"><i data-lucide="columns-3" class="w-3.5 h-3.5 accent-text shrink-0"></i> Kartu per Baris:</span>
-            <span id="cols-val-text" class="font-mono accent-text font-bold text-xs bg-surface px-2 py-0.5 rounded-md border border-glass">4 Kartu</span>
+        <!-- Cards Per Row Controller -->
+        <div id="cols-controller-row" class="flex flex-col sm:flex-row items-center justify-between pt-3 border-t border-divider text-xs gap-2">
+          <div class="flex items-center gap-1.5 text-secondary">
+            <i data-lucide="columns-3" class="w-3.5 h-3.5 accent-text shrink-0"></i>
+            <span class="font-bold text-primary">Kartu per Baris:</span>
           </div>
 
-          <div class="flex items-center gap-2.5 w-full sm:w-52 shrink-0">
-            <span class="text-[10px] text-tertiary font-mono">1</span>
-            <input type="range" id="grid-cols-slider" min="1" max="6" value="4" step="1" class="w-full accent-range cursor-pointer" oninput="setGridColumns(this.value)" onchange="saveGridColumns(this.value)" />
-            <span class="text-[10px] text-tertiary font-mono">6</span>
+          <!-- Liquid Segment Pills (1 to 6) -->
+          <div class="flex items-center gap-1 p-1 rounded-xl bg-input border border-glass w-full sm:w-auto justify-between sm:justify-start">
+            <button type="button" class="col-pill-btn" data-col="1" onclick="setGridColumns(1); saveGridColumns(1);">1</button>
+            <button type="button" class="col-pill-btn" data-col="2" onclick="setGridColumns(2); saveGridColumns(2);">2</button>
+            <button type="button" class="col-pill-btn" data-col="3" onclick="setGridColumns(3); saveGridColumns(3);">3</button>
+            <button type="button" class="col-pill-btn active" data-col="4" onclick="setGridColumns(4); saveGridColumns(4);">4</button>
+            <button type="button" class="col-pill-btn" data-col="5" onclick="setGridColumns(5); saveGridColumns(5);">5</button>
+            <button type="button" class="col-pill-btn" data-col="6" onclick="setGridColumns(6); saveGridColumns(6);">6</button>
           </div>
         </div>
       </div>

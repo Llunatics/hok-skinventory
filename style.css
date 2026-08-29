@@ -972,25 +972,27 @@ dialog.modal[open] .glass-modal {
   }
 }
 
+/* Dynamic Poster Card Styling with Container Query Scaling */
 #items-grid[data-layout="poster"] .skin-card {
   position: relative !important;
   overflow: hidden !important;
   aspect-ratio: 3 / 5.2 !important;
   height: auto !important;
-  min-height: 240px !important;
+  min-height: 180px !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: flex-end !important;
-  border-radius: 24px !important;
+  border-radius: clamp(14px, 6cqi, 24px) !important;
   background: var(--bg-surface) !important;
   border: 1px solid var(--glass-border) !important;
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  container-type: inline-size !important;
 }
 
 @media (max-width: 640px) {
   #items-grid[data-layout="poster"] .skin-card {
-    border-radius: 18px !important;
-    min-height: 210px !important;
+    border-radius: clamp(12px, 5cqi, 18px) !important;
+    min-height: 160px !important;
   }
 }
 
@@ -1015,37 +1017,84 @@ dialog.modal[open] .glass-modal {
   display: none !important;
 }
 
-/* Poster Bottom Dark Gradient Overlay Panel */
+/* Poster Bottom Dark Gradient Overlay Panel (Scales dynamically with card size) */
 #items-grid[data-layout="poster"] .skin-card-body {
   position: absolute !important;
   bottom: 0 !important;
   left: 0 !important;
   right: 0 !important;
   z-index: 10 !important;
-  padding: 24px 12px 12px 12px !important;
-  background: linear-gradient(to top, rgba(5,5,12,0.98) 0%, rgba(5,5,12,0.8) 50%, rgba(5,5,12,0.3) 80%, transparent 100%) !important;
+  padding: clamp(16px, 12cqi, 28px) clamp(8px, 5cqi, 14px) clamp(8px, 5cqi, 14px) clamp(8px, 5cqi, 14px) !important;
+  background: linear-gradient(to top, rgba(5,5,12,0.98) 0%, rgba(5,5,12,0.85) 55%, rgba(5,5,12,0.3) 85%, transparent 100%) !important;
   backdrop-filter: blur(2px) !important;
   -webkit-backdrop-filter: blur(2px) !important;
   border: none !important;
-  border-radius: 0 0 24px 24px !important;
+  border-radius: 0 0 clamp(14px, 6cqi, 24px) clamp(14px, 6cqi, 24px) !important;
 }
 
+/* Dynamic Typography & Elements Scaling */
 #items-grid[data-layout="poster"] .skin-card-hero {
-  font-size: 9.5px !important;
+  font-size: clamp(7.5px, 4cqi, 10px) !important;
   font-weight: 800 !important;
-  letter-spacing: 0.08em !important;
+  letter-spacing: 0.06em !important;
   text-transform: uppercase !important;
   color: var(--accent-light) !important;
   text-shadow: 0 1px 4px rgba(0,0,0,0.95);
 }
 
 #items-grid[data-layout="poster"] .skin-card-name {
-  font-size: 0.95rem !important;
+  font-size: clamp(0.7rem, 6.5cqi, 1rem) !important;
   font-weight: 800 !important;
   line-height: 1.2 !important;
   margin-top: 1px !important;
   color: #ffffff !important;
   text-shadow: 0 2px 8px rgba(0,0,0,0.95);
+}
+
+#items-grid[data-layout="poster"] .rarity-badge {
+  font-size: clamp(7px, 3.8cqi, 9.5px) !important;
+  padding: clamp(1px, 1cqi, 3px) clamp(4px, 2.5cqi, 8px) !important;
+}
+
+#items-grid[data-layout="poster"] .priority-dot {
+  width: clamp(5px, 2.5cqi, 7px) !important;
+  height: clamp(5px, 2.5cqi, 7px) !important;
+}
+
+#items-grid[data-layout="poster"] .skin-card-price {
+  font-size: clamp(8px, 4.5cqi, 11px) !important;
+}
+
+#items-grid[data-layout="poster"] .glass-btn-icon {
+  width: clamp(24px, 12cqi, 32px) !important;
+  height: clamp(24px, 12cqi, 32px) !important;
+}
+
+/* Column Segment Pill Buttons */
+.col-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: monospace;
+  color: var(--text-tertiary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.col-pill-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-surface-hover);
+}
+.col-pill-btn.active {
+  color: var(--accent-text-on);
+  background: var(--accent);
+  box-shadow: 0 2px 8px var(--accent-20);
 }
 
 /* 2. LIST MODE — Compact Horizontal Layout */
