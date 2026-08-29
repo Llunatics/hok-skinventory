@@ -993,7 +993,7 @@ dialog.modal[open] .glass-modal {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(5,5,12,0.98) 0%, rgba(5,5,12,0.82) 48%, rgba(5,5,12,0.25) 75%, transparent 100%);
+  background: linear-gradient(to top, rgba(7,7,15,0.95) 0%, rgba(7,7,15,0.65) 25%, rgba(0,0,0,0) 50%);
   pointer-events: none;
   z-index: 2;
 }
@@ -1001,10 +1001,10 @@ dialog.modal[open] .glass-modal {
 #items-grid[data-layout="poster"] .skin-card-body {
   position: relative !important;
   z-index: 10 !important;
-  padding: 16px 14px 14px 14px !important;
-  background: linear-gradient(to top, var(--bg-modal) 0%, rgba(7,7,15,0.92) 80%, transparent 100%) !important;
-  backdrop-filter: blur(10px) !important;
-  -webkit-backdrop-filter: blur(10px) !important;
+  padding: 12px 14px 14px 14px !important;
+  background: linear-gradient(to top, var(--bg-modal) 0%, rgba(7,7,15,0.85) 70%, transparent 100%) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
   border: none !important;
   margin-top: auto !important;
   border-radius: 0 0 24px 24px !important;

@@ -360,25 +360,29 @@ function renderCard(item) {
       `}
 
       <div class="skin-card-body">
-        <div class="skin-card-hero">${escapeHtml(item.hero)}</div>
-        <div class="skin-card-name">${escapeHtml(item.name)}</div>
-
-        <div class="flex items-center gap-1.5 flex-wrap mt-2.5">
-          <span class="rarity-badge rb-${item.rarity}">${rar.icon} ${rar.label}</span>
-          <span class="status-badge ${status.cssClass}">${status.label}</span>
-          <span class="priority-dot pd-${item.priority}" title="${pri.label}"></span>
-        </div>
-
-        ${item.notes ? `<p class="card-notes">${escapeHtml(item.notes)}</p>` : ''}
-
-        <div class="skin-card-footer">
-          <div>
-            ${item.price ? `<div class="skin-card-price">${formatPrice(item.price)}<span class="price-unit">Token</span></div>` : `<span style="font-size:11px;color:var(--text-muted);">—</span>`}
+        <div class="flex items-end justify-between gap-2 w-full">
+          <div class="min-w-0 flex-1">
+            <div class="skin-card-hero">${escapeHtml(item.hero)}</div>
+            <div class="skin-card-name truncate">${escapeHtml(item.name)}</div>
+            
+            <div class="flex items-center gap-1.5 flex-wrap mt-1">
+              <span class="rarity-badge rb-${item.rarity}">${rar.icon} ${rar.label}</span>
+              <span class="priority-dot pd-${item.priority}" title="${pri.label}"></span>
+              ${item.price ? `<span class="skin-card-price">${formatPrice(item.price)} <span class="price-unit">Token</span></span>` : ''}
+            </div>
           </div>
-          <div class="card-actions">
-            <button class="card-action-btn" title="Edit" onclick="event.stopPropagation();editItem('${item.id}')"><i data-lucide="pencil" class="w-3 h-3"></i></button>
-            <button class="card-action-btn" title="${item.owned ? 'Belum dimiliki' : 'Sudah dimiliki'}" onclick="event.stopPropagation();toggleOwned('${item.id}')"><i data-lucide="${item.owned ? 'undo-2' : 'check'}" class="w-3 h-3"></i></button>
-            <button class="card-action-btn danger" title="Hapus" onclick="event.stopPropagation();confirmDelete('${item.id}')"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+
+          <!-- Options Dropdown Menu (3-dots) -->
+          <div class="dropdown dropdown-end relative z-30" onclick="event.stopPropagation()">
+            <button tabindex="0" class="glass-btn-icon text-xs w-7 h-7 rounded-full flex items-center justify-center p-0 shadow-md" title="Opsi">
+              <i data-lucide="more-vertical" class="w-3.5 h-3.5"></i>
+            </button>
+            <ul tabindex="0" class="dropdown-content z-[60] menu p-1.5 glass-dropdown rounded-2xl w-44 shadow-2xl">
+              <li><button onclick="editItem('${item.id}')"><i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit Skin</button></li>
+              <li><button onclick="toggleOwned('${item.id}')"><i data-lucide="${item.owned ? 'undo-2' : 'check'}" class="w-3.5 h-3.5"></i> ${item.owned ? 'Belum Dimiliki' : 'Sudah Dimiliki'}</button></li>
+              <li class="divider my-0.5"></li>
+              <li><button onclick="confirmDelete('${item.id}')" class="text-red-400 hover:text-red-300"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Hapus</button></li>
+            </ul>
           </div>
         </div>
       </div>
