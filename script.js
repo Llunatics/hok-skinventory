@@ -63,6 +63,15 @@ function setLayout(mode) {
   }
 }
 
+function updateSliderTrack(slider) {
+  if (!slider) return;
+  const min = parseFloat(slider.min) || 1;
+  const max = parseFloat(slider.max) || 6;
+  const val = parseFloat(slider.value) || 4;
+  const pct = ((val - min) / (max - min)) * 100;
+  slider.style.background = `linear-gradient(to right, var(--accent) 0%, var(--accent) ${pct}%, var(--input-bg) ${pct}%, var(--input-bg) 100%)`;
+}
+
 function setGridColumns(cols) {
   const c = parseInt(cols) || 4;
   currentGridCols = c;
@@ -71,14 +80,22 @@ function setGridColumns(cols) {
   if (valText) valText.textContent = `${c} Kartu`;
 
   const slider = document.getElementById('grid-cols-slider');
-  if (slider && slider.value != c) slider.value = c;
+  if (slider) {
+    if (slider.value != c) slider.value = c;
+    updateSliderTrack(slider);
+  }
 
   const gridEl = document.getElementById('items-grid');
   if (gridEl) {
     if (currentLayout === 'list') {
       gridEl.style.gridTemplateColumns = '';
     } else {
-      gridEl.style.gridTemplateColumns = `repeat(${c}, minmax(0, 1fr))`;
+      if (window.innerWidth <= 640) {
+        const mobileCols = Math.min(c, 3);
+        gridEl.style.gridTemplateColumns = `repeat(${mobileCols}, minmax(0, 1fr))`;
+      } else {
+        gridEl.style.gridTemplateColumns = `repeat(${c}, minmax(0, 1fr))`;
+      }
     }
   }
 }
@@ -415,7 +432,7 @@ function renderCard(item) {
       <div class="skin-card-body">
         <div class="flex items-end justify-between gap-2 w-full">
           <div class="min-w-0 flex-1">
-            <div class="skin-card-hero">${escapeHtml(item.hero)}</div>
+            ${item.name && item.name.trim() ? `<div class="skin-card-hero">${escapeHtml(item.hero)}</div>` : ''}
             <div class="skin-card-name">${escapeHtml(item.name && item.name.trim() ? item.name : item.hero)}</div>
             
             <div class="flex items-center gap-1.5 flex-wrap mt-1">
