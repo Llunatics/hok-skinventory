@@ -67,10 +67,11 @@ function setGridColumns(cols) {
   const c = parseInt(cols) || 4;
   currentGridCols = c;
 
-  // Update active pill button state
-  document.querySelectorAll('.col-pill-btn').forEach(btn => {
-    btn.classList.toggle('active', parseInt(btn.dataset.col) === c);
-  });
+  const valText = document.getElementById('cols-val-text');
+  if (valText) valText.textContent = `${c} Kartu`;
+
+  const slider = document.getElementById('grid-cols-slider');
+  if (slider && slider.value != c) slider.value = c;
 
   const gridEl = document.getElementById('items-grid');
   if (gridEl) {

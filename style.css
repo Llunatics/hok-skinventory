@@ -1070,31 +1070,53 @@ dialog.modal[open] .glass-modal {
   height: clamp(24px, 12cqi, 32px) !important;
 }
 
-/* Column Segment Pill Buttons */
-.col-pill-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 700;
-  font-family: monospace;
-  color: var(--text-tertiary);
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+/* Custom Liquid Glass Range Slider */
+input[type="range"].liquid-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  background: var(--bg-surface);
+  border-radius: 999px;
+  outline: none;
+  border: 1px solid var(--glass-border);
 }
-.col-pill-btn:hover {
-  color: var(--text-primary);
-  background: var(--bg-surface-hover);
-}
-.col-pill-btn.active {
-  color: var(--accent-text-on);
+
+/* Chrome, Safari, Edge Thumb */
+input[type="range"].liquid-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
   background: var(--accent);
-  box-shadow: 0 2px 8px var(--accent-20);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 10px var(--accent-50), 0 2px 6px rgba(0,0,0,0.5);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type="range"].liquid-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 14px var(--accent-70), 0 3px 8px rgba(0,0,0,0.6);
+}
+
+/* Firefox Thumb & Track */
+input[type="range"].liquid-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 10px var(--accent-50), 0 2px 6px rgba(0,0,0,0.5);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type="range"].liquid-slider::-moz-range-track {
+  height: 6px;
+  background: var(--bg-surface);
+  border-radius: 999px;
+  border: 1px solid var(--glass-border);
 }
 
 /* 2. LIST MODE — Compact Horizontal Layout */
