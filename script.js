@@ -43,6 +43,7 @@ const STATUSES = {
 };
 
 let currentLayout = localStorage.getItem('hokvault-layout') || 'poster';
+let currentGridCols = parseInt(localStorage.getItem('hokvault-grid-cols')) || 4;
 
 function setLayout(mode) {
   currentLayout = mode;
@@ -50,7 +51,39 @@ function setLayout(mode) {
   document.querySelectorAll('.layout-btn').forEach(b => b.classList.remove('active'));
   document.getElementById(`layout-btn-${mode}`)?.classList.add('active');
   const grid = document.getElementById('items-grid');
-  if (grid) grid.setAttribute('data-layout', mode);
+  if (grid) {
+    grid.setAttribute('data-layout', mode);
+    if (mode === 'list') {
+      grid.style.gridTemplateColumns = '';
+      document.getElementById('cols-controller-row')?.classList.add('hidden');
+    } else {
+      grid.style.gridTemplateColumns = `repeat(${currentGridCols}, minmax(0, 1fr))`;
+      document.getElementById('cols-controller-row')?.classList.remove('hidden');
+    }
+  }
+}
+
+function setGridColumns(cols) {
+  const c = parseInt(cols) || 4;
+  currentGridCols = c;
+  localStorage.setItem('hokvault-grid-cols', c);
+
+  const valText = document.getElementById('cols-val-text');
+  if (valText) valText.textContent = `${c} Kartu`;
+
+  const slider = document.getElementById('grid-cols-slider');
+  if (slider && slider.value != c) slider.value = c;
+
+  const gridEl = document.getElementById('items-grid');
+  if (gridEl) {
+    if (currentLayout === 'list') {
+      gridEl.style.gridTemplateColumns = '';
+    } else {
+      gridEl.style.gridTemplateColumns = `repeat(${c}, minmax(0, 1fr))`;
+    }
+  }
+
+  if (window.pushWishlistToCloud) window.pushWishlistToCloud();
 }
 
 // ---- Init ----
@@ -58,6 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadData();
   loadTheme();
   setLayout(currentLayout);
+  setGridColumns(currentGridCols);
   renderItems();
   updateStats();
   spawnParticles();
@@ -314,7 +348,16 @@ function getFilteredItems() {
 // ---- Rendering ----
 function renderItems() {
   const grid = document.getElementById('items-grid');
-  if (grid) grid.setAttribute('data-layout', currentLayout);
+  if (grid) {
+    grid.setAttribute('data-layout', currentLayout);
+    if (currentLayout === 'list') {
+      grid.style.gridTemplateColumns = '';
+      document.getElementById('cols-controller-row')?.classList.add('hidden');
+    } else {
+      grid.style.gridTemplateColumns = `repeat(${currentGridCols}, minmax(0, 1fr))`;
+      document.getElementById('cols-controller-row')?.classList.remove('hidden');
+    }
+  }
   const emptyState = document.getElementById('empty-state');
   const noResults = document.getElementById('no-results-state');
   const filtered = getFilteredItems();
@@ -814,8 +857,9 @@ document.addEventListener('keydown', (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key === 'n') { e.preventDefault(); openAddModal(); }
 });
 
-// Expose Layout, Framing & Theme Switchers globally
+// Expose Layout, Framing, Columns & Theme Switchers globally
 window.setLayout = setLayout;
+window.setGridColumns = setGridColumns;
 window.updateCropPreview = updateCropPreview;
 window.resetFramingControls = resetFramingControls;
 window.applyScheme = applyScheme;

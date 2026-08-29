@@ -202,6 +202,21 @@
             </button>
           </div>
         </div>
+
+        <!-- Cards Per Row Slider Controller -->
+        <div id="cols-controller-row" class="flex items-center justify-between pt-2.5 border-t border-divider text-xs gap-3">
+          <div class="flex items-center gap-2 text-secondary min-w-0">
+            <i data-lucide="columns-3" class="w-3.5 h-3.5 accent-text shrink-0"></i>
+            <span class="font-semibold text-primary shrink-0">Kartu per Baris:</span>
+            <span id="cols-val-text" class="font-mono accent-text font-bold text-xs shrink-0">4 Kartu</span>
+          </div>
+
+          <div class="flex items-center gap-2 max-w-[200px] w-full">
+            <span class="text-[10px] text-tertiary font-mono">1</span>
+            <input type="range" id="grid-cols-slider" min="1" max="6" value="4" step="1" class="w-full accent-range cursor-pointer" oninput="setGridColumns(this.value)" />
+            <span class="text-[10px] text-tertiary font-mono">6</span>
+          </div>
+        </div>
       </div>
 
       <!-- Mobile Tabs -->

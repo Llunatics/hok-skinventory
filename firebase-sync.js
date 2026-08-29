@@ -105,6 +105,9 @@ function subscribeToUserFirestore(uid) {
           window.applyAccent(data.theme.accent);
           localStorage.setItem('hokvault-accent', data.theme.accent);
         }
+        if (data.theme.gridColumns && window.setGridColumns) {
+          window.setGridColumns(data.theme.gridColumns);
+        }
       }
     } else {
       // First time user cloud setup: push current local wishlist to cloud
@@ -124,11 +127,12 @@ export async function pushWishlistToCloud() {
   try {
     const scheme = localStorage.getItem('hokvault-scheme') || 'dark';
     const accent = localStorage.getItem('hokvault-accent') || 'gold';
+    const gridColumns = parseInt(localStorage.getItem('hokvault-grid-cols')) || 4;
 
     const userDocRef = doc(db, "users", currentUser.uid);
     await setDoc(userDocRef, {
       wishlist: window.wishlist || [],
-      theme: { scheme, accent },
+      theme: { scheme, accent, gridColumns },
       updatedAt: new Date().toISOString(),
       email: currentUser.email,
       displayName: currentUser.displayName
