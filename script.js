@@ -5,6 +5,11 @@
 
 // ---- State ----
 let wishlist = [];
+Object.defineProperty(window, 'wishlist', {
+  get() { return wishlist; },
+  set(val) { wishlist = Array.isArray(val) ? val : []; },
+  configurable: true
+});
 let currentFilter = 'all';
 let currentDetailId = null;
 let pendingConfirmAction = null;
