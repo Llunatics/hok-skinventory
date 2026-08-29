@@ -401,6 +401,8 @@ function openCardMenu(event, id) {
 
   const editBtn = document.getElementById('card-menu-edit-btn');
   const toggleBtn = document.getElementById('card-menu-toggle-btn');
+  const toggleText = document.getElementById('card-menu-toggle-text');
+  const toggleIcon = document.getElementById('card-menu-toggle-icon');
   const deleteBtn = document.getElementById('card-menu-delete-btn');
 
   editBtn.onclick = () => {
@@ -408,7 +410,14 @@ function openCardMenu(event, id) {
     editItem(id);
   };
 
-  toggleBtn.innerHTML = `<i data-lucide="${item.owned ? 'undo-2' : 'check'}" class="w-4 h-4"></i> ${item.owned ? 'Belum Dimiliki' : 'Sudah Dimiliki'}`;
+  if (item.owned) {
+    if (toggleText) toggleText.textContent = 'Tandai Belum Dimiliki';
+    if (toggleIcon) toggleIcon.innerHTML = `<i data-lucide="undo-2" class="w-4 h-4 text-emerald-400"></i>`;
+  } else {
+    if (toggleText) toggleText.textContent = 'Tandai Sudah Dimiliki';
+    if (toggleIcon) toggleIcon.innerHTML = `<i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>`;
+  }
+
   toggleBtn.onclick = () => {
     document.getElementById('card-menu-modal').close();
     toggleOwned(id);

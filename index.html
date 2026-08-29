@@ -148,57 +148,58 @@
     <div class="max-w-7xl mx-auto">
 
       <!-- Filters -->
-      <div class="glass-filter-bar mb-6">
-        <div class="flex flex-col lg:flex-row gap-3 items-stretch lg:items-center">
-          <div class="relative flex-1 min-w-0">
-            <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 search-icon"></i>
-            <input type="text" id="search-input" placeholder="Cari hero atau nama skin..." class="glass-input pl-10 w-full" oninput="renderItems()" />
-          </div>
-          <div class="flex gap-2 flex-wrap">
-            <select id="filter-rarity" class="glass-select" onchange="renderItems()">
-              <option value="all">Semua Rarity</option>
-              <option value="basic">Basic</option>
-              <option value="rare">Rare</option>
-              <option value="epic">Epic</option>
-              <option value="epic_limited">Epic Limited</option>
-              <option value="legend">Legend</option>
-              <option value="legend_limited">Legend Limited</option>
-              <option value="precious">Precious</option>
-              <option value="flawless">Flawless</option>
-              <option value="treasure_flawless">Treasure Flawless</option>
-              <option value="mythic">Mythic</option>
-            </select>
-            <select id="filter-priority" class="glass-select" onchange="renderItems()">
-              <option value="all">Semua Prioritas</option>
-              <option value="must">Harus Punya</option>
-              <option value="high">Tinggi</option>
-              <option value="medium">Sedang</option>
-              <option value="low">Rendah</option>
-            </select>
-            <select id="sort-by" class="glass-select" onchange="renderItems()">
-              <option value="newest">Terbaru</option>
-              <option value="oldest">Terlama</option>
-              <option value="price-high">Harga Tertinggi</option>
-              <option value="price-low">Harga Terendah</option>
-              <option value="priority">Prioritas</option>
-              <option value="name">Nama A-Z</option>
-            </select>
+      <div class="glass-filter-bar mb-6 space-y-3">
+        <div class="relative w-full">
+          <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 search-icon"></i>
+          <input type="text" id="search-input" placeholder="Cari hero atau nama skin..." class="glass-input pl-10 w-full" oninput="renderItems()" />
+        </div>
+        
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+          <select id="filter-rarity" class="glass-select w-full" onchange="renderItems()">
+            <option value="all">Semua Rarity</option>
+            <option value="basic">Basic</option>
+            <option value="rare">Rare</option>
+            <option value="epic">Epic</option>
+            <option value="epic_limited">Epic Limited</option>
+            <option value="legend">Legend</option>
+            <option value="legend_limited">Legend Limited</option>
+            <option value="precious">Precious</option>
+            <option value="flawless">Flawless</option>
+            <option value="treasure_flawless">Treasure Flawless</option>
+            <option value="mythic">Mythic</option>
+          </select>
 
-            <!-- Layout View Switcher -->
-            <div class="layout-switcher-bar">
-              <button id="layout-btn-poster" class="layout-btn active" title="Tampilan Poster Vertical (HoK Style)" onclick="setLayout('poster')">
-                <i data-lucide="image" class="w-3.5 h-3.5"></i>
-                <span class="hidden sm:inline text-xs font-semibold">Poster</span>
-              </button>
-              <button id="layout-btn-grid" class="layout-btn" title="Tampilan Grid Standard" onclick="setLayout('grid')">
-                <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
-                <span class="hidden sm:inline text-xs font-semibold">Grid</span>
-              </button>
-              <button id="layout-btn-list" class="layout-btn" title="Tampilan List Ringkas" onclick="setLayout('list')">
-                <i data-lucide="list" class="w-3.5 h-3.5"></i>
-                <span class="hidden sm:inline text-xs font-semibold">List</span>
-              </button>
-            </div>
+          <select id="filter-priority" class="glass-select w-full" onchange="renderItems()">
+            <option value="all">Semua Prioritas</option>
+            <option value="must">Harus Punya</option>
+            <option value="high">Tinggi</option>
+            <option value="medium">Sedang</option>
+            <option value="low">Rendah</option>
+          </select>
+
+          <select id="sort-by" class="glass-select w-full" onchange="renderItems()">
+            <option value="newest">Terbaru</option>
+            <option value="oldest">Terlama</option>
+            <option value="price-high">Harga Tertinggi</option>
+            <option value="price-low">Harga Terendah</option>
+            <option value="priority">Prioritas</option>
+            <option value="name">Nama A-Z</option>
+          </select>
+
+          <!-- Layout View Switcher -->
+          <div class="layout-switcher-bar w-full justify-between">
+            <button id="layout-btn-poster" class="layout-btn flex-1 justify-center active" title="Tampilan Poster Vertical (HoK Style)" onclick="setLayout('poster')">
+              <i data-lucide="image" class="w-3.5 h-3.5"></i>
+              <span class="text-xs font-semibold">Poster</span>
+            </button>
+            <button id="layout-btn-grid" class="layout-btn flex-1 justify-center" title="Tampilan Grid Standard" onclick="setLayout('grid')">
+              <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
+              <span class="text-xs font-semibold">Grid</span>
+            </button>
+            <button id="layout-btn-list" class="layout-btn flex-1 justify-center" title="Tampilan List Ringkas" onclick="setLayout('list')">
+              <i data-lucide="list" class="w-3.5 h-3.5"></i>
+              <span class="text-xs font-semibold">List</span>
+            </button>
           </div>
         </div>
       </div>
@@ -475,31 +476,45 @@
     <form method="dialog" class="modal-backdrop"><button>close</button></form>
   </dialog>
 
-  <!-- ===== LIQUID GLASS CARD MENU MODAL ===== -->
+  <!-- ===== LIQUID GLASS ACTION SHEET MODAL ===== -->
   <dialog id="card-menu-modal" class="modal modal-bottom sm:modal-middle">
-    <div class="glass-modal max-w-xs p-5 text-center space-y-4">
+    <div class="glass-modal max-w-sm w-full p-5 text-left space-y-4 border border-glass shadow-2xl backdrop-blur-2xl">
       <div class="flex items-center justify-between pb-3 border-b border-divider">
-        <div class="text-left min-w-0 flex-1">
-          <div id="card-menu-hero" class="text-[10px] font-extrabold uppercase tracking-wider accent-text">HERO NAME</div>
+        <div class="min-w-0 flex-1 pr-2">
+          <div id="card-menu-hero" class="text-[10px] font-extrabold uppercase tracking-widest accent-text">HERO NAME</div>
           <h4 id="card-menu-title" class="font-extrabold text-base text-primary truncate">Skin Name</h4>
         </div>
-        <button class="glass-btn-icon text-xs w-7 h-7" onclick="document.getElementById('card-menu-modal').close()"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+        <button class="glass-btn-icon text-xs w-8 h-8 rounded-full shrink-0" onclick="document.getElementById('card-menu-modal').close()">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
       </div>
 
-      <div class="space-y-2">
+      <div class="space-y-2.5">
         <button id="card-menu-edit-btn" class="liquid-menu-btn text-xs w-full">
           <div class="menu-icon-wrap accent-bg-soft"><i data-lucide="pencil" class="w-4 h-4 accent-text"></i></div>
-          <span class="font-semibold text-primary">Edit Skin</span>
+          <div class="flex-1 text-left">
+            <div class="font-bold text-primary">Edit Skin</div>
+            <div class="text-[10px] text-tertiary">Ubah nama, harga, rarity atau gambar</div>
+          </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-tertiary"></i>
         </button>
 
         <button id="card-menu-toggle-btn" class="liquid-menu-btn text-xs w-full">
-          <div class="menu-icon-wrap accent-bg-soft" id="card-menu-toggle-icon"><i data-lucide="check" class="w-4 h-4 accent-text"></i></div>
-          <span class="font-semibold text-primary" id="card-menu-toggle-text">Tandai Dimiliki</span>
+          <div class="menu-icon-wrap bg-emerald-500/15 text-emerald-400" id="card-menu-toggle-icon"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i></div>
+          <div class="flex-1 text-left">
+            <div class="font-bold text-primary" id="card-menu-toggle-text">Tandai Sudah Dimiliki</div>
+            <div class="text-[10px] text-tertiary">Ubah status kepemilikan skin</div>
+          </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-tertiary"></i>
         </button>
 
-        <button id="card-menu-delete-btn" class="liquid-menu-btn text-xs w-full hover:border-red-500/40">
-          <div class="menu-icon-wrap bg-red-500/10 text-red-400"><i data-lucide="trash-2" class="w-4 h-4 text-red-400"></i></div>
-          <span class="font-semibold text-red-400">Hapus Skin</span>
+        <button id="card-menu-delete-btn" class="liquid-menu-btn text-xs w-full border-red-500/20 hover:border-red-500/50">
+          <div class="menu-icon-wrap bg-red-500/15 text-red-400"><i data-lucide="trash-2" class="w-4 h-4 text-red-400"></i></div>
+          <div class="flex-1 text-left">
+            <div class="font-bold text-red-400">Hapus Skin</div>
+            <div class="text-[10px] text-red-400/60">Hapus skin ini dari wishlist</div>
+          </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-red-400/50"></i>
         </button>
       </div>
     </div>
