@@ -127,12 +127,14 @@ function setScheme(scheme) {
   applyScheme(scheme);
   localStorage.setItem('hokvault-scheme', scheme);
   showToast(`Mode ${scheme === 'dark' ? 'gelap' : 'terang'} diaktifkan`, 'info');
+  if (window.pushWishlistToCloud) window.pushWishlistToCloud();
   if (document.activeElement) document.activeElement.blur();
 }
 
 function setAccent(accent) {
   applyAccent(accent);
   localStorage.setItem('hokvault-accent', accent);
+  if (window.pushWishlistToCloud) window.pushWishlistToCloud();
   if (document.activeElement) document.activeElement.blur();
 }
 
@@ -751,6 +753,8 @@ document.addEventListener('keydown', (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key === 'n') { e.preventDefault(); openAddModal(); }
 });
 
-// Expose Layout & Framing Switchers globally
+// Expose Layout, Framing & Theme Switchers globally
 window.setLayout = setLayout;
 window.updateCropPreview = updateCropPreview;
+window.applyScheme = applyScheme;
+window.applyAccent = applyAccent;

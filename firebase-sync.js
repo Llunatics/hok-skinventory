@@ -96,6 +96,16 @@ function subscribeToUserFirestore(uid) {
         if (window.renderItems) window.renderItems();
         if (window.updateStats) window.updateStats();
       }
+      if (data.theme) {
+        if (data.theme.scheme && window.applyScheme) {
+          window.applyScheme(data.theme.scheme);
+          localStorage.setItem('hokvault-scheme', data.theme.scheme);
+        }
+        if (data.theme.accent && window.applyAccent) {
+          window.applyAccent(data.theme.accent);
+          localStorage.setItem('hokvault-accent', data.theme.accent);
+        }
+      }
     } else {
       // First time user cloud setup: push current local wishlist to cloud
       pushWishlistToCloud();
@@ -112,14 +122,17 @@ function subscribeToUserFirestore(uid) {
 export async function pushWishlistToCloud() {
   if (!db || !currentUser) return;
   try {
+    const scheme = localStorage.getItem('hokvault-scheme') || 'dark';
+    const accent = localStorage.getItem('hokvault-accent') || 'gold';
+
     const userDocRef = doc(db, "users", currentUser.uid);
     await setDoc(userDocRef, {
       wishlist: window.wishlist || [],
+      theme: { scheme, accent },
       updatedAt: new Date().toISOString(),
       email: currentUser.email,
       displayName: currentUser.displayName
     }, { merge: true });
-    if (window.showToast) window.showToast('Wishlist tersimpan di Cloud Database!', 'success');
   } catch (err) {
     console.error("Gagal sync ke cloud:", err);
     if (err.code === 'permission-denied') {
