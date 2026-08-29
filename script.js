@@ -372,22 +372,48 @@ function renderCard(item) {
             </div>
           </div>
 
-          <!-- Options Dropdown Menu (3-dots) -->
-          <div class="dropdown dropdown-end relative z-30" onclick="event.stopPropagation()">
-            <button tabindex="0" class="glass-btn-icon text-xs w-7 h-7 rounded-full flex items-center justify-center p-0 shadow-md" title="Opsi">
-              <i data-lucide="more-vertical" class="w-3.5 h-3.5"></i>
-            </button>
-            <ul tabindex="0" class="dropdown-content z-[60] menu p-1.5 glass-dropdown rounded-2xl w-44 shadow-2xl">
-              <li><button onclick="editItem('${item.id}')"><i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit Skin</button></li>
-              <li><button onclick="toggleOwned('${item.id}')"><i data-lucide="${item.owned ? 'undo-2' : 'check'}" class="w-3.5 h-3.5"></i> ${item.owned ? 'Belum Dimiliki' : 'Sudah Dimiliki'}</button></li>
-              <li class="divider my-0.5"></li>
-              <li><button onclick="confirmDelete('${item.id}')" class="text-red-400 hover:text-red-300"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Hapus</button></li>
-            </ul>
-          </div>
+          <!-- Options Menu Trigger Button -->
+          <button class="glass-btn-icon text-xs w-7 h-7 rounded-full flex items-center justify-center p-0 shadow-md shrink-0 relative z-20"
+                  title="Opsi Skin"
+                  onclick="openCardMenu(event, '${item.id}')">
+            <i data-lucide="more-vertical" class="w-3.5 h-3.5"></i>
+          </button>
         </div>
       </div>
     </div>
   `;
+}
+
+function openCardMenu(event, id) {
+  event.stopPropagation();
+  const item = wishlist.find(i => i.id === id);
+  if (!item) return;
+
+  document.getElementById('card-menu-title').textContent = item.name;
+  document.getElementById('card-menu-hero').textContent = item.hero;
+
+  const editBtn = document.getElementById('card-menu-edit-btn');
+  const toggleBtn = document.getElementById('card-menu-toggle-btn');
+  const deleteBtn = document.getElementById('card-menu-delete-btn');
+
+  editBtn.onclick = () => {
+    document.getElementById('card-menu-modal').close();
+    editItem(id);
+  };
+
+  toggleBtn.innerHTML = `<i data-lucide="${item.owned ? 'undo-2' : 'check'}" class="w-4 h-4"></i> ${item.owned ? 'Belum Dimiliki' : 'Sudah Dimiliki'}`;
+  toggleBtn.onclick = () => {
+    document.getElementById('card-menu-modal').close();
+    toggleOwned(id);
+  };
+
+  deleteBtn.onclick = () => {
+    document.getElementById('card-menu-modal').close();
+    confirmDelete(id);
+  };
+
+  document.getElementById('card-menu-modal').showModal();
+  lucide.createIcons();
 }
 
 // ---- Stats ----

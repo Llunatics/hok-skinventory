@@ -431,6 +431,22 @@
     <form method="dialog" class="modal-backdrop"><button>close</button></form>
   </dialog>
 
+  <!-- ===== CARD MENU MODAL (Action Sheet) ===== -->
+  <dialog id="card-menu-modal" class="modal modal-bottom sm:modal-middle">
+    <div class="glass-modal max-w-xs p-4">
+      <div class="text-center pb-3 border-b border-divider mb-3">
+        <h4 id="card-menu-title" class="font-bold text-sm text-primary truncate">Nama Skin</h4>
+        <p id="card-menu-hero" class="text-xs text-tertiary">Hero Name</p>
+      </div>
+      <div class="space-y-1.5">
+        <button id="card-menu-edit-btn" class="glass-btn-ghost w-full justify-start gap-2.5 py-2.5 text-xs"><i data-lucide="pencil" class="w-4 h-4"></i> Edit Skin</button>
+        <button id="card-menu-toggle-btn" class="glass-btn-ghost w-full justify-start gap-2.5 py-2.5 text-xs"><i data-lucide="check" class="w-4 h-4"></i> Tandai Dimiliki</button>
+        <button id="card-menu-delete-btn" class="glass-btn-ghost w-full justify-start gap-2.5 py-2.5 text-xs text-red-400 hover:text-red-300"><i data-lucide="trash-2" class="w-4 h-4"></i> Hapus Skin</button>
+      </div>
+    </div>
+    <form method="dialog" class="modal-backdrop"><button>close</button></form>
+  </dialog>
+
   <!-- Toast -->
   <div id="toast-container" class="fixed bottom-6 right-6 z-[100] flex flex-col gap-2 items-end"></div>
 
