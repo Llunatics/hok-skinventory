@@ -414,6 +414,7 @@ function renderCard(item) {
 
       <div class="skin-card-body">
         <div class="flex items-end justify-between gap-2 w-full">
+          <div class="min-w-0 flex-1">
             <div class="skin-card-hero">${escapeHtml(item.hero)}</div>
             <div class="skin-card-name">${escapeHtml(item.name && item.name.trim() ? item.name : item.hero)}</div>
             
