@@ -1067,11 +1067,39 @@ dialog.modal[open] .glass-modal {
   background: transparent;
 }
 
-#items-grid[data-layout="list"] .skin-card-footer {
-  margin-top: 0;
-  padding-top: 0;
-  border-top: none;
-  gap: 14px;
+/* Liquid Glass Menu Buttons */
+.liquid-menu-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 16px;
+  background: var(--input-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+.liquid-menu-btn:hover {
+  background: var(--bg-surface-hover);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px var(--accent-15);
+}
+.menu-icon-wrap {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.accent-bg-soft {
+  background: var(--accent-15);
+}
+.accent-range {
+  accent-color: var(--accent);
 }
 
 

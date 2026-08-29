@@ -350,7 +350,7 @@ function renderCard(item) {
 
       ${hasImg ? `
         <div class="skin-card-img">
-          <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" loading="lazy"
+          <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" loading="lazy" style="object-position: center ${item.imagePos !== undefined ? item.imagePos : 15}%;"
                onerror="this.closest('.skin-card-img').outerHTML='<div class=\\'skin-card-placeholder\\' data-r=\\'${item.rarity}\\'><span class=\\'skin-card-placeholder-icon\\'>${rar.icon}</span></div>'" />
         </div>
       ` : `
@@ -430,6 +430,14 @@ function updateStats() {
   document.getElementById('progress-bar').style.width = progress + '%';
 }
 
+function updateCropPreview(val) {
+  const v = val !== undefined ? parseInt(val) : (parseInt(document.getElementById('form-image-pos')?.value) || 15);
+  const posText = document.getElementById('pos-val-text');
+  if (posText) posText.textContent = `${v}% (${v < 35 ? 'Atas/Wajah' : v > 65 ? 'Bawah' : 'Tengah'})`;
+  const imgEl = document.getElementById('image-preview-img');
+  if (imgEl) imgEl.style.objectPosition = `center ${v}%`;
+}
+
 // ---- CRUD ----
 function openAddModal() {
   document.getElementById('modal-title').textContent = 'Tambah Skin Baru';
@@ -439,6 +447,8 @@ function openAddModal() {
   document.getElementById('form-rarity').value = 'epic';
   document.getElementById('form-priority').value = 'medium';
   document.getElementById('form-status').value = 'available';
+  document.getElementById('form-image-pos').value = 15;
+  updateCropPreview(15);
   uploadedImageData = null;
   removeImagePreview();
   switchImageTab('url');
@@ -460,6 +470,8 @@ function editItem(id) {
   document.getElementById('form-priority').value = item.priority;
   document.getElementById('form-status').value = item.status || 'available';
   document.getElementById('form-notes').value = item.notes || '';
+  const pos = item.imagePos !== undefined ? item.imagePos : 15;
+  document.getElementById('form-image-pos').value = pos;
 
   // Handle image
   uploadedImageData = null;
@@ -474,6 +486,7 @@ function editItem(id) {
     document.getElementById('form-image').value = item.image || '';
     if (item.image) showImagePreview(item.image);
   }
+  updateCropPreview(pos);
 
   document.getElementById('item-modal').showModal();
   lucide.createIcons();
@@ -490,6 +503,7 @@ function saveItem(event) {
   const priority = document.getElementById('form-priority').value;
   const status = document.getElementById('form-status').value;
   const notes = document.getElementById('form-notes').value.trim();
+  const imagePos = parseInt(document.getElementById('form-image-pos').value) || 15;
 
   // Determine image source
   let image = '';
@@ -507,12 +521,12 @@ function saveItem(event) {
   if (id) {
     const idx = wishlist.findIndex(i => i.id === id);
     if (idx !== -1) {
-      wishlist[idx] = { ...wishlist[idx], hero, name, price, rarity, priority, status, image, notes, updatedAt: new Date().toISOString() };
+      wishlist[idx] = { ...wishlist[idx], hero, name, price, rarity, priority, status, image, imagePos, notes, updatedAt: new Date().toISOString() };
       showToast('Skin berhasil diperbarui', 'success');
     }
   } else {
     wishlist.push({
-      id: generateId(), hero, name, price, rarity, priority, status, image, notes,
+      id: generateId(), hero, name, price, rarity, priority, status, image, imagePos, notes,
       owned: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
     });
     showToast('Skin berhasil ditambahkan', 'success');
@@ -737,5 +751,6 @@ document.addEventListener('keydown', (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key === 'n') { e.preventDefault(); openAddModal(); }
 });
 
-// Expose Layout Switcher globally
+// Expose Layout & Framing Switchers globally
 window.setLayout = setLayout;
+window.updateCropPreview = updateCropPreview;

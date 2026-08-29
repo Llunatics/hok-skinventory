@@ -431,17 +431,32 @@
     <form method="dialog" class="modal-backdrop"><button>close</button></form>
   </dialog>
 
-  <!-- ===== CARD MENU MODAL (Action Sheet) ===== -->
+  <!-- ===== LIQUID GLASS CARD MENU MODAL ===== -->
   <dialog id="card-menu-modal" class="modal modal-bottom sm:modal-middle">
-    <div class="glass-modal max-w-xs p-4">
-      <div class="text-center pb-3 border-b border-divider mb-3">
-        <h4 id="card-menu-title" class="font-bold text-sm text-primary truncate">Nama Skin</h4>
-        <p id="card-menu-hero" class="text-xs text-tertiary">Hero Name</p>
+    <div class="glass-modal max-w-xs p-5 text-center space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-divider">
+        <div class="text-left min-w-0 flex-1">
+          <div id="card-menu-hero" class="text-[10px] font-extrabold uppercase tracking-wider accent-text">HERO NAME</div>
+          <h4 id="card-menu-title" class="font-extrabold text-base text-primary truncate">Skin Name</h4>
+        </div>
+        <button class="glass-btn-icon text-xs w-7 h-7" onclick="document.getElementById('card-menu-modal').close()"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
       </div>
-      <div class="space-y-1.5">
-        <button id="card-menu-edit-btn" class="glass-btn-ghost w-full justify-start gap-2.5 py-2.5 text-xs"><i data-lucide="pencil" class="w-4 h-4"></i> Edit Skin</button>
-        <button id="card-menu-toggle-btn" class="glass-btn-ghost w-full justify-start gap-2.5 py-2.5 text-xs"><i data-lucide="check" class="w-4 h-4"></i> Tandai Dimiliki</button>
-        <button id="card-menu-delete-btn" class="glass-btn-ghost w-full justify-start gap-2.5 py-2.5 text-xs text-red-400 hover:text-red-300"><i data-lucide="trash-2" class="w-4 h-4"></i> Hapus Skin</button>
+
+      <div class="space-y-2">
+        <button id="card-menu-edit-btn" class="liquid-menu-btn text-xs w-full">
+          <div class="menu-icon-wrap accent-bg-soft"><i data-lucide="pencil" class="w-4 h-4 accent-text"></i></div>
+          <span class="font-semibold text-primary">Edit Skin</span>
+        </button>
+
+        <button id="card-menu-toggle-btn" class="liquid-menu-btn text-xs w-full">
+          <div class="menu-icon-wrap accent-bg-soft" id="card-menu-toggle-icon"><i data-lucide="check" class="w-4 h-4 accent-text"></i></div>
+          <span class="font-semibold text-primary" id="card-menu-toggle-text">Tandai Dimiliki</span>
+        </button>
+
+        <button id="card-menu-delete-btn" class="liquid-menu-btn text-xs w-full hover:border-red-500/40">
+          <div class="menu-icon-wrap bg-red-500/10 text-red-400"><i data-lucide="trash-2" class="w-4 h-4 text-red-400"></i></div>
+          <span class="font-semibold text-red-400">Hapus Skin</span>
+        </button>
       </div>
     </div>
     <form method="dialog" class="modal-backdrop"><button>close</button></form>
