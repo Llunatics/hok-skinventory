@@ -17,8 +17,12 @@ import {
   getFirestore,
   doc,
   setDoc,
+  deleteDoc,
+  collection,
   onSnapshot,
-  getDoc
+  getDoc,
+  getDocs,
+  writeBatch
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 // Production Firebase Configuration for HoK Vault
@@ -80,22 +84,35 @@ function initFirebase() {
   }
 }
 
-// Subscribe to User's Cloud Wishlist
+// Subscribe to User's Cloud Wishlist via Subcollection
 function subscribeToUserFirestore(uid) {
   if (!db) return;
-  const userDocRef = doc(db, "users", uid);
 
   if (unsubscribeFirestore) unsubscribeFirestore();
 
-  unsubscribeFirestore = onSnapshot(userDocRef, (docSnap) => {
+  // First: check parent doc for theme metadata & legacy array auto-migration
+  const userDocRef = doc(db, "users", uid);
+  getDoc(userDocRef).then(async (docSnap) => {
     if (docSnap.exists()) {
       const data = docSnap.data();
-      if (Array.isArray(data.wishlist)) {
-        window.wishlist = data.wishlist;
-        localStorage.setItem('hokvault-data', JSON.stringify(data.wishlist));
-        if (window.renderItems) window.renderItems();
-        if (window.updateStats) window.updateStats();
+      // Auto-migrate legacy single-document wishlist array to subcollection
+      if (Array.isArray(data.wishlist) && data.wishlist.length > 0) {
+        try {
+          const batch = writeBatch(db);
+          data.wishlist.forEach(item => {
+            if (item && item.id) {
+              const itemRef = doc(db, "users", uid, "wishlist", item.id);
+              batch.set(itemRef, item);
+            }
+          });
+          batch.update(userDocRef, { wishlist: null });
+          await batch.commit();
+          console.log("Legacy wishlist array successfully migrated to subcollection.");
+        } catch (mErr) {
+          console.warn("Legacy migration warning:", mErr);
+        }
       }
+
       if (data.theme) {
         if (data.theme.scheme && window.applyScheme) {
           window.applyScheme(data.theme.scheme);
@@ -109,8 +126,25 @@ function subscribeToUserFirestore(uid) {
           window.setGridColumns(data.theme.gridColumns);
         }
       }
-    } else {
-      // First time user cloud setup: push current local wishlist to cloud
+    }
+  }).catch(err => console.warn("Parent doc read error:", err));
+
+  // Listen to subcollection `users/{uid}/wishlist`
+  const wishlistColRef = collection(db, "users", uid, "wishlist");
+  unsubscribeFirestore = onSnapshot(wishlistColRef, (snapshot) => {
+    const cloudWishlist = [];
+    snapshot.forEach(docSnap => {
+      cloudWishlist.push(docSnap.data());
+    });
+
+    if (cloudWishlist.length > 0 || !snapshot.empty) {
+      window.wishlist = cloudWishlist;
+      if (window.saveWishlistToIDB) window.saveWishlistToIDB(cloudWishlist);
+      else localStorage.setItem('hokvault-data', JSON.stringify(cloudWishlist));
+
+      if (window.renderItems) window.renderItems();
+      if (window.updateStats) window.updateStats();
+    } else if (snapshot.empty && window.wishlist && window.wishlist.length > 0) {
       pushWishlistToCloud();
     }
   }, (error) => {
@@ -121,7 +155,7 @@ function subscribeToUserFirestore(uid) {
   });
 }
 
-// Push local wishlist to Cloud Firestore
+// Push local wishlist to Cloud Firestore Subcollection
 export async function pushWishlistToCloud() {
   if (!db || !currentUser) return;
   try {
@@ -129,14 +163,41 @@ export async function pushWishlistToCloud() {
     const accent = localStorage.getItem('hokvault-accent') || 'gold';
     const gridColumns = parseInt(localStorage.getItem('hokvault-grid-cols')) || 4;
 
+    // Save user theme/metadata
     const userDocRef = doc(db, "users", currentUser.uid);
     await setDoc(userDocRef, {
-      wishlist: window.wishlist || [],
       theme: { scheme, accent, gridColumns },
       updatedAt: new Date().toISOString(),
       email: currentUser.email,
       displayName: currentUser.displayName
     }, { merge: true });
+
+    // Sync all wishlist items into subcollection
+    const items = window.wishlist || [];
+    const wishlistColRef = collection(db, "users", currentUser.uid, "wishlist");
+
+    const existingSnap = await getDocs(wishlistColRef);
+    const existingIds = new Set();
+    existingSnap.forEach(d => existingIds.add(d.id));
+
+    const currentIds = new Set(items.map(i => i.id));
+    const batch = writeBatch(db);
+
+    // Delete items removed locally
+    existingIds.forEach(id => {
+      if (!currentIds.has(id)) {
+        batch.delete(doc(db, "users", currentUser.uid, "wishlist", id));
+      }
+    });
+
+    // Save/update active items
+    items.forEach(item => {
+      if (item && item.id) {
+        batch.set(doc(db, "users", currentUser.uid, "wishlist", item.id), item);
+      }
+    });
+
+    await batch.commit();
   } catch (err) {
     console.error("Gagal sync ke cloud:", err);
     if (err.code === 'permission-denied') {
