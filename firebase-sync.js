@@ -283,11 +283,35 @@ function closeCloudModal() {
   document.getElementById('cloud-modal')?.close();
 }
 
+// Save single item directly to cloud
+export async function saveCloudItem(item) {
+  if (!db || !currentUser || !item || !item.id) return;
+  try {
+    const itemRef = doc(db, "users", currentUser.uid, "wishlist", item.id);
+    await setDoc(itemRef, item);
+  } catch (err) {
+    console.error("Gagal simpan item ke cloud:", err);
+  }
+}
+
+// Delete single item directly from cloud
+export async function deleteCloudItem(id) {
+  if (!db || !currentUser || !id) return;
+  try {
+    const itemRef = doc(db, "users", currentUser.uid, "wishlist", id);
+    await deleteDoc(itemRef);
+  } catch (err) {
+    console.error("Gagal hapus item dari cloud:", err);
+  }
+}
+
 // Expose to window for inline onclick handlers
 window.loginGoogle = loginGoogle;
 window.logoutGoogle = logoutGoogle;
 window.saveFirebaseConfig = saveFirebaseConfig;
 window.pushWishlistToCloud = pushWishlistToCloud;
+window.saveCloudItem = saveCloudItem;
+window.deleteCloudItem = deleteCloudItem;
 
 // Auto init on load
 document.addEventListener('DOMContentLoaded', initFirebase);

@@ -732,18 +732,25 @@ function saveItem(event) {
     return;
   }
 
+  let savedItemObj = null;
   if (id) {
     const idx = wishlist.findIndex(i => i.id === id);
     if (idx !== -1) {
-      wishlist[idx] = { ...wishlist[idx], hero, name, price, rarity, priority, status, image, imageScale, imagePosY, imagePosX, notes, updatedAt: new Date().toISOString() };
+      savedItemObj = { ...wishlist[idx], hero, name, price, rarity, priority, status, image, imageScale, imagePosY, imagePosX, notes, updatedAt: new Date().toISOString() };
+      wishlist[idx] = savedItemObj;
       showToast('Skin berhasil diperbarui', 'success');
     }
   } else {
-    wishlist.push({
+    savedItemObj = {
       id: generateId(), hero, name, price, rarity, priority, status, image, imageScale, imagePosY, imagePosX, notes,
       owned: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
-    });
+    };
+    wishlist.push(savedItemObj);
     showToast('Skin berhasil ditambahkan', 'success');
+  }
+
+  if (savedItemObj && window.saveCloudItem) {
+    window.saveCloudItem(savedItemObj);
   }
 
   saveData();
@@ -753,6 +760,7 @@ function saveItem(event) {
 
 function deleteItem(id) {
   wishlist = wishlist.filter(i => i.id !== id);
+  if (window.deleteCloudItem) window.deleteCloudItem(id);
   saveData();
   renderItems();
   showToast('Skin berhasil dihapus', 'warning');
@@ -766,6 +774,7 @@ function toggleOwned(id) {
   item.updatedAt = new Date().toISOString();
   item.owned ? (item.ownedAt = new Date().toISOString()) : delete item.ownedAt;
 
+  if (window.saveCloudItem) window.saveCloudItem(item);
   saveData();
   renderItems();
 
