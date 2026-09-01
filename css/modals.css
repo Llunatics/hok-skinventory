@@ -1,0 +1,168 @@
+/* ═══════════════════════════════════════════════════════════════
+   HoK Vault — Modals & Overlays
+   Dialogs, Dropdowns, Toast, Confetti
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ───────────── MODALS & DIALOGS ───────────── */
+
+.glass-modal {
+  background: var(--bg-modal) !important;
+  color: var(--text-primary) !important;
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: 28px;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.3), var(--glass-inset);
+  padding: 28px; max-width: 540px; width: 100%; margin: auto;
+  position: relative; max-height: 90vh; overflow-y: auto;
+}
+
+.modal-icon {
+  width: 42px; height: 42px; border-radius: 9999px;
+  background: var(--accent-10); color: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+}
+
+.modal-title { font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 800; color: var(--text-primary); }
+.modal-subtitle { font-size: 12.5px; color: var(--text-tertiary); margin-top: 2px; }
+
+.confirm-icon {
+  width: 56px; height: 56px; border-radius: 9999px;
+  background: rgba(239,68,68,0.12); color: #ef4444;
+  display: flex; align-items: center; justify-content: center; margin: 0 auto;
+}
+
+.detail-img-gradient { position: absolute; inset: 0; background: var(--detail-gradient); }
+
+.glass-dropdown {
+  background: var(--bg-modal) !important;
+  backdrop-filter: blur(30px) !important; -webkit-backdrop-filter: blur(30px) !important;
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.25) !important;
+}
+.glass-dropdown li button, .glass-dropdown li a {
+  color: var(--text-secondary); font-size: 12.5px; font-weight: 500; border-radius: 9999px;
+  padding: 8px 14px; transition: all 0.2s ease;
+  display: flex; align-items: center; gap: 8px;
+}
+.glass-dropdown li button:hover, .glass-dropdown li a:hover {
+  background: var(--bg-surface-hover); color: var(--text-primary);
+}
+
+@media (max-width: 640px) {
+  .glass-modal { border-radius: 28px 28px 0 0 !important; padding: 22px 18px !important; }
+
+  /* Navbar Dropdown Mobile View Optimization */
+  .glass-nav .dropdown .dropdown-content {
+    position: fixed !important;
+    top: 68px !important;
+    left: 12px !important;
+    right: 12px !important;
+    width: auto !important;
+    max-width: calc(100vw - 24px) !important;
+    margin: 0 auto !important;
+    transform-origin: top center !important;
+  }
+}
+
+
+/* ───────────── DIALOG & MODAL ANIMATIONS ───────────── */
+
+dialog.modal {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: auto !important;
+}
+
+dialog.modal::backdrop {
+  background: var(--modal-backdrop-bg) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  animation: backdropFadeIn 0.25s ease both;
+}
+
+@keyframes backdropFadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+dialog.modal[open] .glass-modal {
+  animation: modalPopIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes modalPopIn {
+  0% { opacity: 0; transform: scale(0.92) translateY(14px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-backdrop {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.modal .glass-modal {
+  background: var(--bg-modal) !important;
+  color: var(--text-primary) !important;
+}
+
+
+/* ───────────── TOAST ───────────── */
+
+.glass-toast {
+  position: relative;
+  overflow: hidden;
+  padding: 12px 18px 14px;
+  border-radius: 9999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 240px;
+  max-width: 380px;
+  background: var(--bg-modal);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 14px 40px rgba(0,0,0,0.25);
+  animation: toastIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both, toastOut 0.3s ease 2.7s both;
+}
+.glass-toast.toast-success { border-left: 4px solid #10b981; }
+.glass-toast.toast-error   { border-left: 4px solid #ef4444; }
+.glass-toast.toast-warning { border-left: 4px solid #f59e0b; }
+.glass-toast.toast-info    { border-left: 4px solid var(--accent); }
+
+.toast-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 16px;
+  right: 16px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 9999px;
+  opacity: 0.7;
+  animation: toastProgress 2.8s linear forwards;
+}
+
+@keyframes toastProgress {
+  0% { width: calc(100% - 32px); }
+  100% { width: 0%; }
+}
+
+@keyframes toastIn { 0% { opacity: 0; transform: translateX(80px) scale(0.94); } 100% { opacity: 1; transform: translateX(0) scale(1); } }
+@keyframes toastOut { 0% { opacity: 1; transform: translateX(0); } 100% { opacity: 0; transform: translateX(80px); } }
+
+
+/* ───────────── CONFETTI ───────────── */
+
+.confetti-piece {
+  position: fixed; pointer-events: none; z-index: 9999;
+  animation: confettiFall 1.8s cubic-bezier(0.25,0.46,0.45,0.94) forwards;
+}
+@keyframes confettiFall {
+  0% { opacity: 1; transform: translateY(0) rotateZ(0deg) scale(1); }
+  100% { opacity: 0; transform: translateY(450px) rotateZ(720deg) scale(0); }
+}
