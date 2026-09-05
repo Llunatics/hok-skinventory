@@ -1,70 +1,179 @@
 /* ═══════════════════════════════════════════════════════════════
    HoK Vault — CSS Variables
    Scheme (Dark/Light) & Accent Color Tokens
+   Enhanced Liquid Glass Design System
    ═══════════════════════════════════════════════════════════════ */
 
 /* ───────────── THEME: COLOR SCHEME ───────────── */
 
 [data-scheme="dark"] {
-  --bg-base: #07070f;
-  --bg-surface: rgba(255, 255, 255, 0.04);
-  --bg-surface-hover: rgba(255, 255, 255, 0.08);
-  --bg-elevated: #16162c;
-  --bg-modal: #121226;
-  --text-primary: #f8fafc;
+  --bg-base: #06060e;
+  --bg-surface: rgba(255, 255, 255, 0.035);
+  --bg-surface-hover: rgba(255, 255, 255, 0.07);
+  --bg-elevated: #14142a;
+  --bg-modal: rgba(14, 14, 32, 0.92);
+  --text-primary: #f1f5f9;
   --text-secondary: #cbd5e1;
   --text-tertiary: #94a3b8;
   --text-muted: #64748b;
-  --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
-  --glass-bg-strong: linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.04) 100%);
-  --glass-border: rgba(255, 255, 255, 0.09);
-  --glass-border-hover: rgba(255, 255, 255, 0.18);
-  --glass-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4);
-  --glass-shadow-hover: 0 20px 50px -10px rgba(0, 0, 0, 0.55);
-  --glass-inset: inset 0 1px 0 rgba(255, 255, 255, 0.07);
-  --nav-bg: rgba(14, 14, 28, 0.85);
-  --card-gradient-overlay: linear-gradient(to top, #07070f 0%, transparent 100%);
-  --detail-gradient: linear-gradient(to top, #121226 0%, transparent 100%);
-  --input-bg: rgba(255, 255, 255, 0.045);
-  --input-border: rgba(255, 255, 255, 0.1);
+
+  /* Liquid Glass Core */
+  --glass-bg: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 255, 255, 0.02) 50%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  --glass-bg-strong: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.10) 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.07) 100%
+  );
+  --glass-bg-solid: rgba(16, 16, 36, 0.85);
+
+  /* Liquid Glass Borders */
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-border-hover: rgba(255, 255, 255, 0.16);
+  --glass-border-active: rgba(255, 255, 255, 0.22);
+  --glass-refraction: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.03) 40%,
+    rgba(255, 255, 255, 0.0) 60%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+
+  /* Liquid Glass Shadows & Depth */
+  --glass-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.35),
+                  0 0 0 1px rgba(255, 255, 255, 0.05);
+  --glass-shadow-hover: 0 12px 40px -8px rgba(0, 0, 0, 0.5),
+                        0 0 0 1px rgba(255, 255, 255, 0.09);
+  --glass-shadow-elevated: 0 20px 60px -12px rgba(0, 0, 0, 0.6),
+                           0 0 0 1px rgba(255, 255, 255, 0.08);
+  --glass-inset: inset 0 1px 0 rgba(255, 255, 255, 0.08),
+                 inset 0 0 24px rgba(255, 255, 255, 0.02);
+  --glass-depth: 0 1px 2px rgba(0,0,0,0.3),
+                 0 2px 4px rgba(0,0,0,0.2),
+                 0 4px 8px rgba(0,0,0,0.15);
+
+  /* Liquid Shimmer */
+  --glass-shimmer: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.04) 35%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.04) 65%,
+    transparent 80%
+  );
+  --liquid-highlight: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    transparent 40%
+  );
+
+  /* Nav & Input */
+  --nav-bg: rgba(10, 10, 24, 0.82);
+  --card-gradient-overlay: linear-gradient(to top, #06060e 0%, transparent 100%);
+  --detail-gradient: linear-gradient(to top, rgba(14,14,32,0.95) 0%, transparent 100%);
+  --input-bg: rgba(255, 255, 255, 0.04);
+  --input-bg-hover: rgba(255, 255, 255, 0.06);
+  --input-border: rgba(255, 255, 255, 0.08);
   --input-focus-border: var(--accent);
   --input-focus-ring: var(--accent-15);
-  --orb-opacity: 0.4;
+
+  /* Misc */
+  --orb-opacity: 0.35;
   --particle-color: var(--accent);
-  --scrollbar-thumb: rgba(255, 255, 255, 0.12);
-  --divider: rgba(255, 255, 255, 0.07);
-  --modal-backdrop-bg: rgba(0, 0, 0, 0.65);
+  --scrollbar-thumb: rgba(255, 255, 255, 0.10);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.18);
+  --divider: rgba(255, 255, 255, 0.06);
+  --modal-backdrop-bg: rgba(0, 0, 0, 0.7);
 }
 
 [data-scheme="light"] {
-  --bg-base: #f8fafc;
-  --bg-surface: rgba(0, 0, 0, 0.04);
-  --bg-surface-hover: rgba(0, 0, 0, 0.07);
+  --bg-base: #f4f6fb;
+  --bg-surface: rgba(255, 255, 255, 0.65);
+  --bg-surface-hover: rgba(255, 255, 255, 0.85);
   --bg-elevated: #ffffff;
-  --bg-modal: #ffffff;
+  --bg-modal: rgba(255, 255, 255, 0.95);
   --text-primary: #0f172a;
   --text-secondary: #334155;
   --text-tertiary: #64748b;
   --text-muted: #94a3b8;
-  --glass-bg: rgba(255, 255, 255, 0.85);
-  --glass-bg-strong: rgba(255, 255, 255, 0.95);
-  --glass-border: #e2e8f0;
-  --glass-border-hover: #cbd5e1;
-  --glass-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.06), 0 0 0 1px #e2e8f0;
-  --glass-shadow-hover: 0 20px 40px -10px rgba(0, 0, 0, 0.12);
-  --glass-inset: inset 0 1px 0 #ffffff;
-  --nav-bg: rgba(255, 255, 255, 0.88);
-  --card-gradient-overlay: linear-gradient(to top, #f8fafc 0%, transparent 100%);
-  --detail-gradient: linear-gradient(to top, #ffffff 0%, transparent 100%);
-  --input-bg: #f1f5f9;
-  --input-border: #cbd5e1;
+
+  /* Liquid Glass Core */
+  --glass-bg: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.80) 0%,
+    rgba(255, 255, 255, 0.60) 50%,
+    rgba(255, 255, 255, 0.70) 100%
+  );
+  --glass-bg-strong: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.92) 0%,
+    rgba(255, 255, 255, 0.80) 50%,
+    rgba(255, 255, 255, 0.88) 100%
+  );
+  --glass-bg-solid: rgba(255, 255, 255, 0.92);
+
+  /* Liquid Glass Borders */
+  --glass-border: rgba(0, 0, 0, 0.06);
+  --glass-border-hover: rgba(0, 0, 0, 0.10);
+  --glass-border-active: rgba(0, 0, 0, 0.15);
+  --glass-refraction: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.4) 40%,
+    rgba(255, 255, 255, 0.2) 60%,
+    rgba(255, 255, 255, 0.7) 100%
+  );
+
+  /* Liquid Glass Shadows & Depth */
+  --glass-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.06),
+                  0 0 0 1px rgba(0, 0, 0, 0.04);
+  --glass-shadow-hover: 0 12px 40px -8px rgba(0, 0, 0, 0.10),
+                        0 0 0 1px rgba(0, 0, 0, 0.06);
+  --glass-shadow-elevated: 0 20px 60px -12px rgba(0, 0, 0, 0.12),
+                           0 0 0 1px rgba(0, 0, 0, 0.05);
+  --glass-inset: inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                 inset 0 0 24px rgba(255, 255, 255, 0.3);
+  --glass-depth: 0 1px 2px rgba(0,0,0,0.04),
+                 0 2px 4px rgba(0,0,0,0.03),
+                 0 4px 8px rgba(0,0,0,0.02);
+
+  /* Liquid Shimmer */
+  --glass-shimmer: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.5) 35%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0.5) 65%,
+    transparent 80%
+  );
+  --liquid-highlight: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.6) 0%,
+    transparent 40%
+  );
+
+  /* Nav & Input */
+  --nav-bg: rgba(255, 255, 255, 0.78);
+  --card-gradient-overlay: linear-gradient(to top, #f4f6fb 0%, transparent 100%);
+  --detail-gradient: linear-gradient(to top, rgba(255,255,255,0.98) 0%, transparent 100%);
+  --input-bg: rgba(0, 0, 0, 0.03);
+  --input-bg-hover: rgba(0, 0, 0, 0.05);
+  --input-border: rgba(0, 0, 0, 0.08);
   --input-focus-border: var(--accent);
   --input-focus-ring: var(--accent-15);
-  --orb-opacity: 0.15;
+
+  /* Misc */
+  --orb-opacity: 0.12;
   --particle-color: var(--accent);
-  --scrollbar-thumb: #cbd5e1;
-  --divider: #e2e8f0;
-  --modal-backdrop-bg: rgba(15, 23, 42, 0.45);
+  --scrollbar-thumb: rgba(0, 0, 0, 0.12);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.20);
+  --divider: rgba(0, 0, 0, 0.06);
+  --modal-backdrop-bg: rgba(15, 23, 42, 0.35);
 }
 
 /* ───────────── THEME: ACCENT COLORS ───────────── */
@@ -76,6 +185,6 @@
 [data-accent="jade"]   { --accent: #10b981; --accent-light: #6ee7b7; --accent-dark: #047857; --accent-40: rgba(16,185,129,0.4); --accent-20: rgba(16,185,129,0.2); --accent-15: rgba(16,185,129,0.15); --accent-10: rgba(16,185,129,0.1); --accent-08: rgba(16,185,129,0.08); --accent-text-on: #0a0a18; }
 [data-accent="rose"]   { --accent: #fb7185; --accent-light: #fecdd3; --accent-dark: #be123c; --accent-40: rgba(251,113,133,0.4); --accent-20: rgba(251,113,133,0.2); --accent-15: rgba(251,113,133,0.15); --accent-10: rgba(251,113,133,0.1); --accent-08: rgba(251,113,133,0.08); --accent-text-on: #0a0a18; }
 [data-accent="amber"]  { --accent: #f59e0b; --accent-light: #fde68a; --accent-dark: #92400e; --accent-40: rgba(245,158,11,0.4); --accent-20: rgba(245,158,11,0.2); --accent-15: rgba(245,158,11,0.15); --accent-10: rgba(245,158,11,0.1); --accent-08: rgba(245,158,11,0.08); --accent-text-on: #0a0a18; }
-[data-accent="sky"]    { --accent: #0ea5e9; --accent-light: #7dd3fc; --accent-dark: #0369a1; --accent-40: rgba(14,165,233,0.4); --accent-20: rgba(14,165,233,0.2); --accent-15: rgba(14,165,233,0.15); --accent-10: rgba(14,165,233,0.1); --accent-08: rgba(14,165,233,0.08); --accent-text-on: #fff; }
+[data-accent="sky"]    { --accent: #0ea5e9; --accent-light: #7dd3fc; --accent-dark: #0369a1; --accent-40: rgba(14,165,233,0.4); --accent-20: rgba(14,165,233,0.2); --accent-15: rgba(14,165,233,0.15); --accent-10: rgba(14,165,233,0.1); --accent-08: rgba(14,165,233,0.08); --accent-text-on: #0a0a18; }
 [data-accent="lime"]   { --accent: #84cc16; --accent-light: #bef264; --accent-dark: #4d7c0f; --accent-40: rgba(132,204,22,0.4); --accent-20: rgba(132,204,22,0.2); --accent-15: rgba(132,204,22,0.15); --accent-10: rgba(132,204,22,0.1); --accent-08: rgba(132,204,22,0.08); --accent-text-on: #0a0a18; }
 [data-accent="coral"]  { --accent: #f97316; --accent-light: #fdba74; --accent-dark: #c2410c; --accent-40: rgba(249,115,22,0.4); --accent-20: rgba(249,115,22,0.2); --accent-15: rgba(249,115,22,0.15); --accent-10: rgba(249,115,22,0.1); --accent-08: rgba(249,115,22,0.08); --accent-text-on: #0a0a18; }

@@ -1,9 +1,10 @@
 /* ═══════════════════════════════════════════════════════════════
    HoK Vault — Micro-Interaction Animations
-   Press Effects, Light Sweep, Icon Bounce, Hover Transitions
+   Liquid Glass Press Effects, Shimmer, Icon Bounce, Hover FX
    ═══════════════════════════════════════════════════════════════ */
 
-/* Press Active Physics on Interactive Elements */
+/* ───────────── Press Active Physics ───────────── */
+
 .glass-btn-primary:active,
 .glass-btn-ghost:active,
 .glass-btn-danger:active,
@@ -15,7 +16,9 @@
   transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Primary Button Light Sweep Effect */
+
+/* ───────────── Primary Button Shimmer Sweep ───────────── */
+
 .glass-btn-primary {
   position: relative;
   overflow: hidden;
@@ -24,33 +27,43 @@
   content: '';
   position: absolute;
   top: 0; left: -120%; width: 60%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
   transform: skewX(-20deg);
-  transition: left 0.65s ease;
+  transition: left 0.7s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .glass-btn-primary:hover::after {
   left: 180%;
 }
 
-/* Smooth Icon Bounce on Action Button Hover */
-.card-action-btn:hover i {
-  animation: iconBounce 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+/* ───────────── Icon Bounce on Action Button Hover ───────────── */
+
+.card-action-btn:hover i,
+.liquid-menu-btn:hover .menu-icon-wrap i {
+  animation: iconBounce 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 @keyframes iconBounce {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.25); }
+  50% { transform: scale(1.22); }
 }
 
-/* Dropdown Menu Smooth Open & Close Transitions */
+
+/* ───────────── Dropdown Smooth Open & Close ───────────── */
+
 .dropdown .dropdown-content {
   opacity: 0;
   visibility: hidden;
   transform: scale(0.92) translateY(-8px);
   transform-origin: top right;
-  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-              visibility 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
 }
 
@@ -63,35 +76,129 @@
   pointer-events: auto;
 }
 
-/* Stat Icon Hover Interaction */
+
+/* ───────────── Stat Card Hover Interactions ───────────── */
+
 .glass-stat {
-  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.35s ease,
+              box-shadow 0.35s ease;
 }
 .glass-stat:hover .stat-icon-wrap {
-  transform: scale(1.12) rotate(4deg);
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: scale(1.14) rotate(5deg);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .glass-stat .stat-icon-wrap {
-  transition: transform 0.3s ease;
+  transition: transform 0.35s ease;
 }
 
-/* Active Nav Pill Icon Bounce */
+/* Stat number glow pulse on hover */
+.glass-stat:hover .stat-number {
+  text-shadow: 0 0 24px rgba(255,255,255,0.1);
+  transition: text-shadow 0.4s ease;
+}
+.glass-stat:hover .stat-num-2 { text-shadow: 0 0 24px rgba(139,92,246,0.25); }
+.glass-stat:hover .stat-num-3 { text-shadow: 0 0 24px rgba(16,185,129,0.25); }
+.glass-stat:hover .stat-num-4 { text-shadow: 0 0 24px rgba(6,182,212,0.25); }
+
+
+/* ───────────── Active Nav Pill Icon Pop ───────────── */
+
 .nav-pill.active i {
-  animation: pillIconPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: pillIconPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 @keyframes pillIconPop {
-  0% { transform: scale(0.6); }
-  50% { transform: scale(1.3); }
+  0% { transform: scale(0.5); }
+  50% { transform: scale(1.35); }
   100% { transform: scale(1); }
 }
 
-/* Upload Zone Hover Icon Lift */
+
+/* ───────────── Upload Zone Hover Icon Lift ───────────── */
+
 .upload-zone {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .upload-zone:hover .upload-zone-content i {
-  transform: translateY(-4px) scale(1.1);
+  transform: translateY(-5px) scale(1.12);
   color: var(--accent);
-  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+              color 0.3s ease;
+}
+
+
+/* ───────────── Card Hover Subtle Shine Sweep ───────────── */
+
+.skin-card {
+  position: relative;
+}
+
+/* Shimmer sweep effect on card hover */
+@keyframes cardShimmer {
+  0% { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(200%) skewX(-15deg); }
+}
+
+.skin-card:hover::after {
+  animation: cardShimmerPulse 1.5s ease-in-out;
+}
+
+@keyframes cardShimmerPulse {
+  0% { opacity: 0.3; }
+  50% { opacity: 0.55; }
+  100% { opacity: 0.3; }
+}
+
+
+/* ───────────── Liquid Glass Input Focus Glow ───────────── */
+
+.glass-input:focus,
+.glass-select:focus {
+  transition: border-color 0.3s ease,
+              box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              background 0.3s ease;
+}
+
+
+/* ───────────── Logo Icon Ambient Glow ───────────── */
+
+.logo-icon {
+  animation: logoAmbient 4s ease-in-out infinite;
+}
+
+@keyframes logoAmbient {
+  0%, 100% { box-shadow: 0 0 16px var(--accent-08); }
+  50% { box-shadow: 0 0 24px var(--accent-15); }
+}
+
+
+/* ───────────── Smooth Page-Level Scheme Transition ───────────── */
+
+html {
+  transition: background-color 0.5s ease;
+}
+
+html[data-scheme] * {
+  transition-property: background-color, border-color, color, box-shadow, opacity;
+  transition-duration: 0.35s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Preserve intentional transition overrides */
+.skin-card,
+.skin-card *,
+.glass-btn-primary,
+.glass-btn-ghost,
+.glass-btn-danger,
+.glass-btn-icon,
+.nav-pill,
+.mobile-tab,
+.glass-stat,
+input[type="range"],
+.progress-fill,
+.confetti-piece,
+.particle,
+.orb {
+  transition-property: all;
 }

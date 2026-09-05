@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════
    HoK Vault — Modals & Overlays
-   Dialogs, Dropdowns, Toast, Confetti
+   Liquid Glass Dialogs, Dropdowns, Toast, Confetti
    ═══════════════════════════════════════════════════════════════ */
 
 /* ───────────── MODALS & DIALOGS ───────────── */
@@ -8,45 +8,104 @@
 .glass-modal {
   background: var(--bg-modal) !important;
   color: var(--text-primary) !important;
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  backdrop-filter: blur(48px) saturate(180%);
+  -webkit-backdrop-filter: blur(48px) saturate(180%);
   border: 1px solid var(--glass-border);
   border-radius: 28px;
-  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.3), var(--glass-inset);
+  box-shadow: var(--glass-shadow-elevated);
   padding: 28px; max-width: 540px; width: 100%; margin: auto;
   position: relative; max-height: 90vh; overflow-y: auto;
 }
 
-.modal-icon {
-  width: 42px; height: 42px; border-radius: 9999px;
-  background: var(--accent-10); color: var(--accent);
-  display: flex; align-items: center; justify-content: center;
+/* Modal liquid refraction line */
+.glass-modal::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 12px; right: 12px;
+  height: 1px;
+  background: var(--glass-refraction);
+  z-index: 5; pointer-events: none;
+  border-radius: 1px;
 }
 
-.modal-title { font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 800; color: var(--text-primary); }
+/* Modal inner highlight */
+.glass-modal::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 40%;
+  background: var(--liquid-highlight);
+  pointer-events: none; z-index: 0;
+  opacity: 0.35;
+  border-radius: 28px 28px 0 0;
+}
+
+.glass-modal > * { position: relative; z-index: 1; }
+
+.modal-icon {
+  width: 44px; height: 44px; border-radius: 14px;
+  background: var(--accent-10); color: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 16px var(--accent-08),
+              inset 0 1px 0 rgba(255,255,255,0.1);
+}
+
+.modal-title {
+  font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 800;
+  color: var(--text-primary);
+}
 .modal-subtitle { font-size: 12.5px; color: var(--text-tertiary); margin-top: 2px; }
 
 .confirm-icon {
-  width: 56px; height: 56px; border-radius: 9999px;
-  background: rgba(239,68,68,0.12); color: #ef4444;
+  width: 60px; height: 60px; border-radius: 18px;
+  background: rgba(239,68,68,0.1); color: #ef4444;
   display: flex; align-items: center; justify-content: center; margin: 0 auto;
+  box-shadow: 0 0 24px rgba(239,68,68,0.08),
+              inset 0 1px 0 rgba(255,255,255,0.05);
+  position: relative;
+}
+.confirm-icon::after {
+  content: '';
+  position: absolute; inset: -3px; border-radius: 21px;
+  border: 1px solid rgba(239,68,68,0.15);
+  animation: confirmPulse 2s ease-in-out infinite;
+}
+@keyframes confirmPulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0; transform: scale(1.15); }
 }
 
 .detail-img-gradient { position: absolute; inset: 0; background: var(--detail-gradient); }
 
 .glass-dropdown {
   background: var(--bg-modal) !important;
-  backdrop-filter: blur(30px) !important; -webkit-backdrop-filter: blur(30px) !important;
+  backdrop-filter: blur(36px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(170%) !important;
   border: 1px solid var(--glass-border) !important;
-  box-shadow: 0 16px 48px rgba(0,0,0,0.25) !important;
+  box-shadow: var(--glass-shadow-elevated) !important;
+  position: relative;
 }
+/* Dropdown refraction */
+.glass-dropdown::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 8px; right: 8px;
+  height: 1px;
+  background: var(--glass-refraction);
+  z-index: 5; pointer-events: none;
+  border-radius: 1px;
+}
+
 .glass-dropdown li button, .glass-dropdown li a {
-  color: var(--text-secondary); font-size: 12.5px; font-weight: 500; border-radius: 9999px;
-  padding: 8px 14px; transition: all 0.2s ease;
+  color: var(--text-secondary); font-size: 12.5px; font-weight: 500;
+  border-radius: 12px;
+  padding: 9px 14px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex; align-items: center; gap: 8px;
 }
 .glass-dropdown li button:hover, .glass-dropdown li a:hover {
   background: var(--bg-surface-hover); color: var(--text-primary);
+  box-shadow: var(--glass-depth);
 }
 
 @media (max-width: 640px) {
@@ -77,9 +136,9 @@ dialog.modal {
 
 dialog.modal::backdrop {
   background: var(--modal-backdrop-bg) !important;
-  backdrop-filter: blur(8px) !important;
-  -webkit-backdrop-filter: blur(8px) !important;
-  animation: backdropFadeIn 0.25s ease both;
+  backdrop-filter: blur(12px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(120%) !important;
+  animation: backdropFadeIn 0.3s ease both;
 }
 
 @keyframes backdropFadeIn {
@@ -88,11 +147,12 @@ dialog.modal::backdrop {
 }
 
 dialog.modal[open] .glass-modal {
-  animation: modalPopIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: modalPopIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes modalPopIn {
-  0% { opacity: 0; transform: scale(0.92) translateY(14px); }
+  0% { opacity: 0; transform: scale(0.9) translateY(20px); }
+  50% { transform: scale(1.01) translateY(-2px); }
   100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 
@@ -113,8 +173,8 @@ dialog.modal[open] .glass-modal {
 .glass-toast {
   position: relative;
   overflow: hidden;
-  padding: 12px 18px 14px;
-  border-radius: 9999px;
+  padding: 14px 20px 16px;
+  border-radius: 18px;
   font-size: 12.5px;
   font-weight: 600;
   color: var(--text-primary);
@@ -124,16 +184,28 @@ dialog.modal[open] .glass-modal {
   min-width: 240px;
   max-width: 380px;
   background: var(--bg-modal);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(32px) saturate(160%);
+  -webkit-backdrop-filter: blur(32px) saturate(160%);
   border: 1px solid var(--glass-border);
-  box-shadow: 0 14px 40px rgba(0,0,0,0.25);
-  animation: toastIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both, toastOut 0.3s ease 2.7s both;
+  box-shadow: var(--glass-shadow-elevated);
+  animation: toastIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both,
+             toastOut 0.35s cubic-bezier(0.4, 0, 0.2, 1) 2.65s both;
 }
-.glass-toast.toast-success { border-left: 4px solid #10b981; }
-.glass-toast.toast-error   { border-left: 4px solid #ef4444; }
-.glass-toast.toast-warning { border-left: 4px solid #f59e0b; }
-.glass-toast.toast-info    { border-left: 4px solid var(--accent); }
+
+/* Toast liquid refraction */
+.glass-toast::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 8px; right: 8px;
+  height: 1px;
+  background: var(--glass-refraction);
+  pointer-events: none; opacity: 0.5;
+}
+
+.glass-toast.toast-success { border-left: 3px solid #10b981; }
+.glass-toast.toast-error   { border-left: 3px solid #ef4444; }
+.glass-toast.toast-warning { border-left: 3px solid #f59e0b; }
+.glass-toast.toast-info    { border-left: 3px solid var(--accent); }
 
 .toast-progress-bar {
   position: absolute;
@@ -143,7 +215,7 @@ dialog.modal[open] .glass-modal {
   height: 2px;
   background: var(--accent);
   border-radius: 9999px;
-  opacity: 0.7;
+  opacity: 0.6;
   animation: toastProgress 2.8s linear forwards;
 }
 
@@ -152,15 +224,22 @@ dialog.modal[open] .glass-modal {
   100% { width: 0%; }
 }
 
-@keyframes toastIn { 0% { opacity: 0; transform: translateX(80px) scale(0.94); } 100% { opacity: 1; transform: translateX(0) scale(1); } }
-@keyframes toastOut { 0% { opacity: 1; transform: translateX(0); } 100% { opacity: 0; transform: translateX(80px); } }
+@keyframes toastIn {
+  0% { opacity: 0; transform: translateX(80px) scale(0.92); }
+  60% { transform: translateX(-4px) scale(1.01); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes toastOut {
+  0% { opacity: 1; transform: translateX(0) scale(1); }
+  100% { opacity: 0; transform: translateX(60px) scale(0.95); }
+}
 
 
 /* ───────────── CONFETTI ───────────── */
 
 .confetti-piece {
   position: fixed; pointer-events: none; z-index: 9999;
-  animation: confettiFall 1.8s cubic-bezier(0.25,0.46,0.45,0.94) forwards;
+  animation: confettiFall 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 @keyframes confettiFall {
   0% { opacity: 1; transform: translateY(0) rotateZ(0deg) scale(1); }

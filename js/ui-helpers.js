@@ -13,6 +13,16 @@ function formatPrice(num) {
   return Number(num).toLocaleString('id-ID');
 }
 
+// Step price up/down for custom spinner buttons
+function stepPrice(dir) {
+  const input = document.getElementById('form-price');
+  if (!input) return;
+  let val = parseInt(input.value) || 0;
+  val = Math.max(0, val + dir);
+  input.value = val;
+  input.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
 function timeAgo(dateStr) {
   const s = Math.floor((Date.now() - new Date(dateStr)) / 1000);
   if (s < 60) return 'Baru saja';
