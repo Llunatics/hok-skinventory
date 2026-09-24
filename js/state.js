@@ -16,4 +16,8 @@ let pendingConfirmAction = null;
 let uploadedImageData = null; // For local image uploads
 
 let currentLayout = localStorage.getItem('hokvault-layout') || 'poster';
+if (currentLayout !== 'poster' && currentLayout !== 'list') {
+  currentLayout = 'poster';
+  localStorage.setItem('hokvault-layout', 'poster');
+}
 let currentGridCols = parseInt(localStorage.getItem('hokvault-grid-cols')) || 4;

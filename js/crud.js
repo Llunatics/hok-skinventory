@@ -15,7 +15,15 @@ function openAddModal() {
   uploadedImageData = null;
   removeImagePreview();
   switchImageTab('url');
-  document.getElementById('item-modal').showModal();
+  
+  const modal = document.getElementById('item-modal');
+  if (modal) {
+    modal.showModal();
+    lockBodyScroll();
+    setTimeout(() => {
+      document.getElementById('form-hero')?.focus();
+    }, 50);
+  }
   lucide.createIcons();
 }
 
@@ -54,9 +62,14 @@ function editItem(id) {
     document.getElementById('form-image').value = item.image || '';
     if (item.image) showImagePreview(item.image);
   }
-  updateCropPreview();
-
-  document.getElementById('item-modal').showModal();
+  const modal = document.getElementById('item-modal');
+  if (modal) {
+    modal.showModal();
+    lockBodyScroll();
+    setTimeout(() => {
+      document.getElementById('form-hero')?.focus();
+    }, 50);
+  }
   lucide.createIcons();
 }
 

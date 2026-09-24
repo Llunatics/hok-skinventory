@@ -5,6 +5,7 @@
 
 // ---- Layout ----
 function setLayout(mode) {
+  if (mode !== 'poster' && mode !== 'list') mode = 'poster';
   currentLayout = mode;
   localStorage.setItem('hokvault-layout', mode);
   document.querySelectorAll('.layout-btn').forEach(b => b.classList.remove('active'));
@@ -113,14 +114,12 @@ function renderCard(item) {
   const imgStyle = `object-position: ${posX}% ${posY}%; transform: scale(${scale}); transform-origin: ${posX}% ${posY}%;`;
 
   return `
-    <div class="skin-card ${ownedCls}" data-rarity="${item.rarity}" onclick="openDetail('${item.id}')">
-      <div class="rarity-bar" data-r="${item.rarity}"></div>
-
+    <div class="skin-card ${ownedCls}" data-rarity="${item.rarity}" tabindex="0" role="button" aria-label="Detail skin ${escapeHtml(item.hero)} - ${escapeHtml(item.name || item.hero)}" onclick="openDetail('${item.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){if(!event.target.closest('.card-menu-trigger')){event.preventDefault();openDetail('${item.id}');}}">
       ${item.owned ? '<div class="owned-badge"><i data-lucide="check" class="w-3 h-3"></i> Dimiliki</div>' : ''}
 
       ${hasImg ? `
         <div class="skin-card-img">
-          <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" loading="lazy" style="${imgStyle}"
+          <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name || item.hero)}" loading="lazy" style="${imgStyle}"
                onerror="this.closest('.skin-card-img').outerHTML='<div class=\\'skin-card-placeholder\\' data-r=\\'${item.rarity}\\'><span class=\\'skin-card-placeholder-icon\\'>${rar.icon}</span></div>'" />
         </div>
       ` : `
@@ -142,11 +141,13 @@ function renderCard(item) {
             </div>
           </div>
 
-          <!-- Options Menu Trigger Button -->
-          <button class="glass-btn-icon text-xs w-7 h-7 rounded-full flex items-center justify-center p-0 shadow-md shrink-0 relative z-20"
-                  title="Opsi Skin"
+          <!-- Options Menu Trigger Button (Liquid Glass) -->
+          <button type="button" class="card-menu-trigger"
+                  title="Menu Opsi Skin"
+                  aria-label="Menu opsi skin"
+                  aria-haspopup="true"
                   onclick="openCardMenu(event, '${item.id}')">
-            <i data-lucide="more-vertical" class="w-3.5 h-3.5"></i>
+            <i data-lucide="more-vertical" class="w-3.5 h-3.5 pointer-events-none"></i>
           </button>
         </div>
       </div>
@@ -154,47 +155,128 @@ function renderCard(item) {
   `;
 }
 
-// ---- Card Menu ----
+// ---- Anchored Card Context Menu ----
+let activeContextTrigger = null;
+let contextMenuOpenTime = 0;
+
 function openCardMenu(event, id) {
   event.stopPropagation();
   const item = wishlist.find(i => i.id === id);
   if (!item) return;
 
-  document.getElementById('card-menu-title').textContent = item.name;
-  document.getElementById('card-menu-hero').textContent = item.hero;
+  const menu = document.getElementById('card-context-menu');
+  if (!menu) return;
 
-  const editBtn = document.getElementById('card-menu-edit-btn');
-  const toggleBtn = document.getElementById('card-menu-toggle-btn');
-  const toggleText = document.getElementById('card-menu-toggle-text');
-  const toggleIcon = document.getElementById('card-menu-toggle-icon');
-  const deleteBtn = document.getElementById('card-menu-delete-btn');
+  const triggerBtn = event.currentTarget;
 
-  editBtn.onclick = () => {
-    document.getElementById('card-menu-modal').close();
-    editItem(id);
-  };
-
-  if (item.owned) {
-    if (toggleText) toggleText.textContent = 'Tandai Belum Dimiliki';
-    if (toggleIcon) toggleIcon.innerHTML = `<i data-lucide="undo-2" class="w-4 h-4 text-emerald-400"></i>`;
-  } else {
-    if (toggleText) toggleText.textContent = 'Tandai Sudah Dimiliki';
-    if (toggleIcon) toggleIcon.innerHTML = `<i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>`;
+  // If already open for this same button, toggle close
+  if (!menu.classList.contains('hidden') && activeContextTrigger === triggerBtn) {
+    closeCardMenu();
+    return;
   }
 
-  toggleBtn.onclick = () => {
-    document.getElementById('card-menu-modal').close();
-    toggleOwned(id);
-  };
+  activeContextTrigger = triggerBtn;
+  contextMenuOpenTime = Date.now();
 
-  deleteBtn.onclick = () => {
-    document.getElementById('card-menu-modal').close();
-    confirmDelete(id);
-  };
+  const editBtn = document.getElementById('context-menu-edit-btn');
+  const toggleBtn = document.getElementById('context-menu-toggle-btn');
+  const toggleText = document.getElementById('context-menu-toggle-text');
+  const toggleIcon = document.getElementById('context-menu-toggle-icon');
+  const deleteBtn = document.getElementById('context-menu-delete-btn');
 
-  document.getElementById('card-menu-modal').showModal();
+  if (editBtn) {
+    editBtn.onclick = () => {
+      closeCardMenu();
+      editItem(id);
+    };
+  }
+
+  if (item.owned) {
+    if (toggleText) toggleText.textContent = 'Batalkan Kepemilikan';
+    if (toggleIcon) toggleIcon.setAttribute('data-lucide', 'undo-2');
+  } else {
+    if (toggleText) toggleText.textContent = 'Tandai Sudah Dimiliki';
+    if (toggleIcon) toggleIcon.setAttribute('data-lucide', 'check');
+  }
+
+  if (toggleBtn) {
+    toggleBtn.onclick = () => {
+      closeCardMenu();
+      toggleOwned(id);
+    };
+  }
+
+  if (deleteBtn) {
+    deleteBtn.onclick = () => {
+      closeCardMenu();
+      confirmDelete(id);
+    };
+  }
+
   lucide.createIcons();
+
+  // Position anchored menu with viewport awareness & dynamic transform-origin
+  menu.classList.remove('hidden');
+
+  const rect = triggerBtn.getBoundingClientRect();
+  const menuWidth = 205;
+  const menuHeight = 135;
+
+  let top = rect.bottom + 6;
+  let isAbove = false;
+  if (top + menuHeight > window.innerHeight - 10) {
+    top = Math.max(10, rect.top - menuHeight - 6);
+    isAbove = true;
+  }
+
+  let left = rect.right - menuWidth;
+  let isFlippedX = false;
+  if (left < 10) {
+    left = Math.min(window.innerWidth - menuWidth - 10, Math.max(10, rect.left));
+    isFlippedX = true;
+  }
+
+  const originY = isAbove ? 'bottom' : 'top';
+  const originX = isFlippedX ? 'left' : 'right';
+  menu.style.transformOrigin = `${originY} ${originX}`;
+  menu.style.top = `${Math.round(top)}px`;
+  menu.style.left = `${Math.round(left)}px`;
+
+  if (editBtn) editBtn.focus();
 }
+
+function closeCardMenu() {
+  const menu = document.getElementById('card-context-menu');
+  if (menu && !menu.classList.contains('hidden')) {
+    menu.classList.add('hidden');
+    if (activeContextTrigger) {
+      activeContextTrigger = null;
+    }
+  }
+}
+
+// Global outside click & Escape listener for context menu
+document.addEventListener('pointerdown', (e) => {
+  if (Date.now() - contextMenuOpenTime < 80) return;
+  const menu = document.getElementById('card-context-menu');
+  if (menu && !menu.classList.contains('hidden')) {
+    if (!menu.contains(e.target) && (!activeContextTrigger || !activeContextTrigger.contains(e.target))) {
+      closeCardMenu();
+    }
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeCardMenu();
+  }
+});
+
+window.addEventListener('resize', closeCardMenu);
+window.addEventListener('scroll', () => {
+  if (Date.now() - contextMenuOpenTime < 150) return;
+  closeCardMenu();
+}, true);
 
 // ---- Stats ----
 function updateStats() {

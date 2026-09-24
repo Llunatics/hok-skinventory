@@ -41,7 +41,7 @@
   <!-- ===== FLOATING CAPSULE NAVBAR ===== -->
   <div class="fixed top-4 left-0 right-0 z-50 px-4 sm:px-6 pointer-events-none">
     <nav
-      class="glass-nav max-w-6xl mx-auto rounded-full px-4 sm:px-6 py-2.5 flex items-center justify-between pointer-events-auto shadow-2xl transition-all duration-300">
+      class="glass-nav max-w-6xl mx-auto rounded-full px-4 sm:px-6 py-2.5 flex items-center justify-between pointer-events-auto transition-all duration-300">
       <!-- Logo -->
       <div class="flex items-center gap-3">
         <div class="logo-icon"><i data-lucide="crown" class="w-4 h-4"></i></div>
@@ -220,17 +220,12 @@
             <option value="name">Nama A-Z</option>
           </select>
 
-          <!-- Layout View Switcher -->
+          <!-- Layout View Switcher: Poster and List only -->
           <div class="layout-switcher-bar w-full justify-between">
             <button id="layout-btn-poster" class="layout-btn flex-1 justify-center active"
               title="Tampilan Poster Vertical (HoK Style)" onclick="setLayout('poster')">
               <i data-lucide="image" class="w-3.5 h-3.5 shrink-0"></i>
               <span class="hidden md:inline text-xs font-semibold">Poster</span>
-            </button>
-            <button id="layout-btn-grid" class="layout-btn flex-1 justify-center" title="Tampilan Grid Standard"
-              onclick="setLayout('grid')">
-              <i data-lucide="layout-grid" class="w-3.5 h-3.5 shrink-0"></i>
-              <span class="hidden md:inline text-xs font-semibold">Grid</span>
             </button>
             <button id="layout-btn-list" class="layout-btn flex-1 justify-center" title="Tampilan List Ringkas"
               onclick="setLayout('list')">
@@ -258,8 +253,8 @@
             class="w-3.5 h-3.5"></i> Dimiliki</button>
       </div>
 
-      <!-- Grid -->
-      <div id="items-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5"></div>
+      <!-- Grid / List Container -->
+      <div id="items-grid" class="gap-4 lg:gap-5"></div>
 
       <!-- Empty -->
       <div id="empty-state" class="hidden">
@@ -288,204 +283,357 @@
   <!-- FAB -->
   <button class="fab-add md:hidden" onclick="openAddModal()"><i data-lucide="plus" class="w-6 h-6"></i></button>
 
-  <!-- ===== ADD/EDIT MODAL ===== -->
-  <dialog id="item-modal" class="modal modal-bottom sm:modal-middle">
-    <div class="glass-modal">
-      <button class="glass-btn-icon absolute right-4 top-4 z-10" onclick="closeModal()"><i data-lucide="x"
-          class="w-4 h-4"></i></button>
-      <div class="flex items-center gap-3 mb-6">
-        <div class="modal-icon"><i data-lucide="sparkles" class="w-5 h-5"></i></div>
-        <div>
-          <h3 class="modal-title" id="modal-title">Tambah Skin Baru</h3>
-          <p class="modal-subtitle">Lengkapi informasi skin yang ingin kamu simpan</p>
+  <!-- ===== ADD/EDIT SKIN WORKSPACE MODAL ===== -->
+  <dialog id="item-modal" class="modal modal-bottom sm:modal-middle" aria-labelledby="modal-title">
+    <div class="glass-modal glass-modal-workspace max-w-4xl w-full p-0 overflow-hidden flex flex-col">
+      <!-- Sticky Modal Header -->
+      <div class="modal-header-sticky px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="modal-icon"><i data-lucide="sparkles" class="w-5 h-5"></i></div>
+          <div>
+            <h3 class="modal-title" id="modal-title">Tambah Skin Baru</h3>
+            <p class="modal-subtitle">Atur detail skin & sesuaikan framing poster kartu</p>
+          </div>
         </div>
+        <button type="button" class="glass-btn-icon rounded-full w-9 h-9" onclick="closeModal()" aria-label="Tutup modal">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
       </div>
 
-      <form id="item-form" onsubmit="saveItem(event)">
+      <!-- Scrollable Form Body -->
+      <form id="item-form" onsubmit="saveItem(event)" class="flex flex-col flex-1 overflow-hidden min-h-0">
         <input type="hidden" id="form-id" />
+        <!-- Hidden Crop Values (Preserves existing data model!) -->
+        <input type="hidden" id="form-image-scale" value="100" />
+        <input type="hidden" id="form-image-pos-x" value="50" />
+        <input type="hidden" id="form-image-pos-y" value="15" />
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3.5">
-          <div class="form-group sm:col-span-2">
-            <label class="glass-label">Hero <span class="accent-text">*</span></label>
-            <input type="text" id="form-hero" placeholder="Nama hero, misal: Lü Bu" class="glass-input w-full"
-              required />
-          </div>
-          <div class="form-group sm:col-span-2">
-            <label class="glass-label">Nama Skin <span
-                class="text-tertiary font-normal text-xs">(Opsional)</span></label>
-            <input type="text" id="form-name" placeholder="Nama skin (opsional)" class="glass-input w-full" />
-          </div>
-          <div class="form-group">
-            <label class="glass-label">Harga (Token)</label>
-            <div class="glass-number-group">
-              <button type="button" class="glass-spinner-btn" onclick="stepPrice(-1)" aria-label="Kurangi">
-                <i data-lucide="minus" class="w-3.5 h-3.5"></i>
-              </button>
-              <input type="number" id="form-price" placeholder="0" class="glass-input glass-number-input" min="0" />
-              <button type="button" class="glass-spinner-btn" onclick="stepPrice(1)" aria-label="Tambah">
-                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-              </button>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="glass-label">Rarity</label>
-            <select id="form-rarity" class="glass-select w-full">
-              <option value="basic">Basic</option>
-              <option value="rare">Rare</option>
-              <option value="epic" selected>Epic</option>
-              <option value="epic_limited">Epic Limited</option>
-              <option value="legend">Legend</option>
-              <option value="legend_limited">Legend Limited</option>
-              <option value="precious">Precious</option>
-              <option value="flawless">Flawless</option>
-              <option value="treasure_flawless">Treasure Flawless</option>
-              <option value="mythic">Mythic</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="glass-label">Prioritas</label>
-            <select id="form-priority" class="glass-select w-full">
-              <option value="low">Rendah</option>
-              <option value="medium" selected>Sedang</option>
-              <option value="high">Tinggi</option>
-              <option value="must">Harus Punya</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="glass-label">Ketersediaan</label>
-            <select id="form-status" class="glass-select w-full">
-              <option value="available">Tersedia</option>
-              <option value="upcoming">Mendatang</option>
-              <option value="expired">Tidak Tersedia</option>
-            </select>
-          </div>
+        <div class="modal-body-scroll flex-1 overflow-y-auto p-5 sm:p-6">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- LEFT COLUMN: Form Information -->
+            <div class="lg:col-span-7 space-y-4">
+              <div class="form-group">
+                <label class="glass-label" for="form-hero">Hero <span class="accent-text">*</span></label>
+                <input type="text" id="form-hero" placeholder="Nama hero, misal: Lü Bu" class="glass-input w-full" required />
+              </div>
 
-          <!-- Image Section -->
-          <div class="form-group sm:col-span-2">
-            <label class="glass-label">Gambar Skin</label>
-            <div class="image-input-tabs">
-              <button type="button" class="img-tab active" id="img-tab-url" onclick="switchImageTab('url')">Link
-                URL</button>
-              <button type="button" class="img-tab" id="img-tab-file" onclick="switchImageTab('file')">Upload
-                File</button>
-            </div>
-            <div id="img-input-url">
-              <input type="url" id="form-image" placeholder="https://contoh.com/gambar-skin.jpg"
-                class="glass-input w-full" />
-            </div>
-            <div id="img-input-file" class="hidden">
-              <div class="upload-zone" id="upload-zone" onclick="document.getElementById('form-image-file').click()">
-                <input type="file" id="form-image-file" accept="image/*" class="hidden"
-                  onchange="handleImageUpload(event)" />
-                <div class="upload-zone-content" id="upload-zone-content">
-                  <i data-lucide="image-plus" class="w-6 h-6"></i>
-                  <span>Klik atau seret gambar ke sini</span>
-                  <span class="upload-hint">JPG, PNG, WebP · Maks 2MB</span>
+              <div class="form-group">
+                <label class="glass-label" for="form-name">Nama Skin <span class="text-tertiary font-normal text-xs">(Opsional)</span></label>
+                <input type="text" id="form-name" placeholder="Nama skin, misal: Demon Lord" class="glass-input w-full" />
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div class="form-group">
+                  <label class="glass-label" for="form-price">Harga (Token)</label>
+                  <div class="glass-number-group">
+                    <button type="button" class="glass-spinner-btn" onclick="stepPrice(-1)" aria-label="Kurangi harga">
+                      <i data-lucide="minus" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <input type="number" id="form-price" placeholder="0" class="glass-input glass-number-input" min="0" />
+                    <button type="button" class="glass-spinner-btn" onclick="stepPrice(1)" aria-label="Tambah harga">
+                      <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="glass-label" for="form-rarity">Rarity</label>
+                  <select id="form-rarity" class="glass-select w-full">
+                    <option value="basic">Basic</option>
+                    <option value="rare">Rare</option>
+                    <option value="epic" selected>Epic</option>
+                    <option value="epic_limited">Epic Limited</option>
+                    <option value="legend">Legend</option>
+                    <option value="legend_limited">Legend Limited</option>
+                    <option value="precious">Precious</option>
+                    <option value="flawless">Flawless</option>
+                    <option value="treasure_flawless">Treasure Flawless</option>
+                    <option value="mythic">Mythic</option>
+                  </select>
                 </div>
               </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div class="form-group">
+                  <label class="glass-label" for="form-status">Ketersediaan</label>
+                  <select id="form-status" class="glass-select w-full">
+                    <option value="available" selected>Tersedia</option>
+                    <option value="upcoming">Mendatang</option>
+                    <option value="expired">Tidak Tersedia</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="glass-label" for="form-priority">Prioritas Incaran</label>
+                  <select id="form-priority" class="glass-select w-full">
+                    <option value="must">Harus Punya</option>
+                    <option value="high">Tinggi</option>
+                    <option value="medium" selected>Sedang</option>
+                    <option value="low">Rendah</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="glass-label" for="form-notes">Catatan Skin</label>
+                <textarea id="form-notes" placeholder="Efek animasi, voice line, event khusus, dll..." class="glass-input w-full h-[74px] resize-none"></textarea>
+              </div>
             </div>
-            <!-- Image Preview & Interactive Poster Framing Studio -->
-            <div id="image-preview-wrap" class="hidden mt-3 space-y-3">
-              <!-- Live Poster Card Exact Aspect Ratio Replica Preview -->
-              <div
-                class="relative w-40 h-[285px] mx-auto rounded-2xl overflow-hidden border-2 border-glass shadow-2xl bg-surface group">
-                <div class="w-full h-full overflow-hidden relative">
-                  <img id="image-preview-img" src="" alt="Poster Framing Preview"
-                    class="w-full h-full object-cover transition-transform duration-75" />
-                  <div
-                    class="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#05050c]/98 via-[#05050c]/80 via-50% to-transparent z-10">
+
+            <!-- RIGHT COLUMN: Poster Artwork & Direct Manipulation Framing Studio -->
+            <div class="lg:col-span-5 flex flex-col space-y-3.5">
+              <div class="flex items-center justify-between">
+                <label class="glass-label m-0">Poster Artwork</label>
+                <span id="framing-status-label" class="text-[11px] text-tertiary">Format Kartu (3:5.2)</span>
+              </div>
+
+              <!-- Empty State / Image Picker (When no image selected) -->
+              <div id="image-upload-section" class="space-y-3">
+                <div class="image-input-tabs">
+                  <button type="button" class="img-tab active" id="img-tab-url" onclick="switchImageTab('url')">
+                    <i data-lucide="link" class="w-3.5 h-3.5 inline mr-1"></i> Link URL
+                  </button>
+                  <button type="button" class="img-tab" id="img-tab-file" onclick="switchImageTab('file')">
+                    <i data-lucide="upload" class="w-3.5 h-3.5 inline mr-1"></i> Upload File
+                  </button>
+                </div>
+
+                <div id="img-input-url" class="space-y-2">
+                  <div class="flex gap-2">
+                    <input type="url" id="form-image" placeholder="https://contoh.com/artwork-skin.jpg"
+                      class="glass-input w-full text-xs" oninput="handleUrlInput(event)" onchange="handleUrlInput(event)" />
+                    <button type="button" class="glass-btn-ghost text-xs px-3 shrink-0" onclick="applyUrlImage()">
+                      Muat
+                    </button>
                   </div>
-                  <!-- Poster overlay mock text -->
-                  <div class="absolute bottom-0 left-0 right-0 p-3 pt-6 z-20 pointer-events-none text-left">
-                    <div id="mock-preview-hero"
-                      class="text-[9.5px] font-extrabold uppercase tracking-wider accent-text drop-shadow">PREVIEW HERO
+                  <p class="text-[11px] text-tertiary">Tautan langsung gambar poster (JPG, PNG, WebP)</p>
+                </div>
+
+                <div id="img-input-file" class="hidden">
+                  <div class="upload-zone" id="upload-zone" onclick="document.getElementById('form-image-file').click()">
+                    <input type="file" id="form-image-file" accept="image/*" class="hidden" onchange="handleImageUpload(event)" />
+                    <div class="upload-zone-content" id="upload-zone-content">
+                      <i data-lucide="image-plus" class="w-6 h-6"></i>
+                      <span>Drop gambar di sini atau klik untuk browse</span>
+                      <span class="upload-hint">JPG, PNG, WebP · Maks 5MB</span>
                     </div>
-                    <div id="mock-preview-name" class="text-xs font-black text-white truncate drop-shadow">Preview Nama
-                      Skin</div>
                   </div>
                 </div>
-                <button type="button" class="preview-remove absolute top-2 right-2 z-30"
-                  onclick="removeImagePreview()"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
               </div>
 
-              <!-- Poster Framing Controls Studio -->
-              <div class="p-3.5 rounded-2xl bg-surface border border-glass space-y-3">
-                <div class="flex items-center justify-between">
-                  <span class="font-bold text-xs text-primary flex items-center gap-1.5"><i data-lucide="crop"
-                      class="w-3.5 h-3.5 accent-text"></i> Framing Gambar Poster</span>
-                  <button type="button" class="text-[11px] accent-text font-semibold hover:underline"
-                    onclick="resetFramingControls()">Reset Default</button>
+              <!-- Active Image: Direct Manipulation Crop Workspace -->
+              <div id="crop-studio-wrap" class="hidden space-y-3">
+                <!-- Interactive Crop Viewport Frame (Matches Card Aspect Ratio) -->
+                <div class="crop-frame-wrapper relative mx-auto w-full max-w-[240px] sm:max-w-[250px]">
+                  <div id="crop-viewport" class="crop-viewport relative w-full aspect-[3/5.2] rounded-2xl overflow-hidden bg-black select-none touch-none cursor-grab" title="Drag gambar untuk geser posisi, scroll mouse untuk zoom">
+                    <!-- Artwork Image -->
+                    <img id="crop-image" src="" alt="Framing artwork" class="w-full h-full object-cover pointer-events-none select-none transition-transform duration-75" />
+
+                    <!-- Rule of Thirds Interactive Grid Lines (Visible on drag/zoom) -->
+                    <div id="crop-grid-overlay" class="crop-grid-overlay absolute inset-0 pointer-events-none">
+                      <div class="grid-line grid-line-h1"></div>
+                      <div class="grid-line grid-line-h2"></div>
+                      <div class="grid-line grid-line-v1"></div>
+                      <div class="grid-line grid-line-v2"></div>
+                    </div>
+
+                    <!-- Framing Hint Badge -->
+                    <div id="crop-hint-badge" class="crop-hint-badge absolute top-2.5 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-full text-[10px] font-medium text-white/90 bg-black/60 backdrop-blur-md pointer-events-none transition-opacity duration-300">
+                      <i data-lucide="move" class="w-3 h-3 inline mr-1"></i> Drag & Scroll Zoom
+                    </div>
+
+                    <!-- Optional Mock Card Preview Overlay -->
+                    <div id="crop-mock-card-overlay" class="absolute inset-0 pointer-events-none hidden transition-opacity duration-200">
+                      <div class="absolute inset-0 bg-gradient-to-t from-[#05050c]/98 via-[#05050c]/75 via-50% to-transparent z-10"></div>
+                      <div class="absolute bottom-0 left-0 right-0 p-3 pt-6 z-20 text-left">
+                        <div id="crop-mock-hero" class="text-[9px] font-extrabold uppercase tracking-wider accent-text">PREVIEW HERO</div>
+                        <div id="crop-mock-name" class="text-xs font-black text-white truncate">Preview Nama Skin</div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <!-- Zoom / Scale Slider -->
-                <div class="space-y-1">
-                  <div class="flex justify-between text-[11px]">
-                    <span class="text-secondary flex items-center gap-1"><i data-lucide="zoom-in"
-                        class="w-3 h-3 text-tertiary"></i> Zoom (Scale In / Out)</span>
-                    <span id="scale-val-text" class="font-mono accent-text font-bold">1.0x</span>
+                <!-- Direct Framing Controls Bar -->
+                <div class="crop-controls-group space-y-2.5">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="text-[11px] font-bold text-secondary flex items-center gap-1.5">
+                      <i data-lucide="zoom-in" class="w-3.5 h-3.5 accent-text"></i> Zoom
+                    </span>
+                    <div class="flex items-center gap-1">
+                      <button type="button" class="crop-zoom-btn" onclick="stepCropZoom(-15)" title="Perkecil (-15%)" aria-label="Zoom out">
+                        <i data-lucide="minus" class="w-3.5 h-3.5"></i>
+                      </button>
+                      <span id="crop-scale-badge" class="px-2 py-0.5 rounded-lg text-[11px] font-mono font-bold accent-text text-center min-w-[44px]">1.0x</span>
+                      <button type="button" class="crop-zoom-btn" onclick="stepCropZoom(15)" title="Perbesar (+15%)" aria-label="Zoom in">
+                        <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                      </button>
+                    </div>
                   </div>
-                  <input type="range" id="form-image-scale" min="100" max="250" value="100" step="5"
-                    class="w-full accent-range cursor-pointer" oninput="updateCropPreview()" />
-                </div>
 
-                <!-- Pan Y Slider -->
-                <div class="space-y-1">
-                  <div class="flex justify-between text-[11px]">
-                    <span class="text-secondary flex items-center gap-1"><i data-lucide="arrow-up-down"
-                        class="w-3 h-3 text-tertiary"></i> Posisi Vertikal</span>
-                    <span id="pos-y-val-text" class="font-mono accent-text font-bold">15% (Atas/Wajah)</span>
-                  </div>
-                  <input type="range" id="form-image-pos-y" min="0" max="100" value="15" step="1"
-                    class="w-full accent-range cursor-pointer" oninput="updateCropPreview()" />
-                </div>
+                  <div class="flex items-center justify-between gap-1.5 pt-1 border-t border-divider text-[11px]">
+                    <div class="flex items-center gap-1">
+                      <button type="button" class="crop-tool-btn" onclick="resetCrop('fit')" title="Pusatkan posisi gambar">
+                        <i data-lucide="maximize-2" class="w-3 h-3"></i> Fit
+                      </button>
+                      <button type="button" class="crop-tool-btn" onclick="resetCrop('default')" title="Fokus ke wajah atas">
+                        <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Reset
+                      </button>
+                    </div>
 
-                <!-- Pan X Slider -->
-                <div class="space-y-1">
-                  <div class="flex justify-between text-[11px]">
-                    <span class="text-secondary flex items-center gap-1"><i data-lucide="arrow-left-right"
-                        class="w-3 h-3 text-tertiary"></i> Posisi Horisontal</span>
-                    <span id="pos-x-val-text" class="font-mono accent-text font-bold">50% (Tengah)</span>
+                    <button type="button" id="crop-toggle-mock-btn" class="crop-tool-btn" onclick="toggleCardPreviewMock()" title="Lihat overlay judul kartu">
+                      <i data-lucide="eye" class="w-3 h-3"></i> <span>Preview Kartu</span>
+                    </button>
                   </div>
-                  <input type="range" id="form-image-pos-x" min="0" max="100" value="50" step="1"
-                    class="w-full accent-range cursor-pointer" oninput="updateCropPreview()" />
+
+                  <div class="flex items-center justify-between gap-2 pt-1 border-t border-divider">
+                    <button type="button" class="text-[11px] text-tertiary hover:text-primary transition-colors flex items-center gap-1" onclick="changeImage()">
+                      <i data-lucide="refresh-cw" class="w-3 h-3"></i> Ganti Gambar
+                    </button>
+                    <button type="button" class="text-[11px] text-red-400 hover:text-red-300 transition-colors flex items-center gap-1" onclick="removeImagePreview()">
+                      <i data-lucide="trash-2" class="w-3 h-3"></i> Hapus
+                    </button>
+                  </div>
                 </div>
               </div>
+
             </div>
-          </div>
-
-          <div class="form-group sm:col-span-2">
-            <label class="glass-label">Catatan</label>
-            <textarea id="form-notes" placeholder="Efek skill, voice line, warna favorit, dll..."
-              class="glass-input w-full h-[72px] resize-none"></textarea>
           </div>
         </div>
 
-        <div class="flex gap-3 mt-6">
-          <button type="button" class="glass-btn-ghost flex-1" onclick="closeModal()">Batal</button>
-          <button type="submit" class="glass-btn-primary flex-1"><i data-lucide="save" class="w-4 h-4"></i> <span
-              id="btn-save-text">Simpan</span></button>
+        <!-- Sticky Modal Footer -->
+        <div class="modal-footer-sticky px-6 py-4 flex items-center justify-end gap-3">
+          <button type="button" class="glass-btn-ghost px-5 py-2.5 text-xs font-semibold" onclick="closeModal()">Batal</button>
+          <button type="submit" class="glass-btn-primary px-6 py-2.5 text-xs font-bold">
+            <i data-lucide="save" class="w-4 h-4"></i> <span id="btn-save-text">Simpan</span>
+          </button>
         </div>
       </form>
     </div>
     <form method="dialog" class="modal-backdrop"><button>close</button></form>
   </dialog>
 
-  <!-- ===== DETAIL MODAL ===== -->
-  <dialog id="detail-modal" class="modal modal-bottom sm:modal-middle">
-    <div class="glass-modal p-0 overflow-hidden max-w-lg">
-      <div id="detail-image-wrap" class="relative w-full h-56 overflow-hidden hidden">
-        <img id="detail-image" class="w-full h-full object-cover" />
-        <div class="detail-img-gradient"></div>
-        <button class="glass-btn-icon absolute top-3 right-3 z-10"
-          onclick="document.getElementById('detail-modal').close()"><i data-lucide="x" class="w-4 h-4"></i></button>
+  <!-- ===== SKIN DETAIL MODAL (FLOATING GLASS SHEET) ===== -->
+  <dialog id="detail-modal" class="modal modal-bottom sm:modal-middle" aria-labelledby="detail-skin-name">
+    <div id="detail-glass-modal" class="glass-modal max-w-3xl w-full p-0 overflow-hidden flex flex-col">
+      <!-- Header Bar -->
+      <div class="modal-header-sticky px-6 py-3.5 flex items-center justify-between">
+        <div class="flex items-center gap-2 text-xs font-bold text-tertiary uppercase tracking-wider">
+          <i data-lucide="crown" class="w-4 h-4 accent-text"></i>
+          <span>Detail Koleksi Skin</span>
+        </div>
+        <button class="glass-btn-icon rounded-full w-8 h-8" onclick="closeDetail()" aria-label="Tutup detail">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
       </div>
-      <div class="p-6" id="detail-content"></div>
-      <div class="p-6 pt-0 flex gap-2">
-        <button id="detail-toggle-btn" class="glass-btn-primary flex-1" onclick="togglePurchasedFromDetail()"><i
-            data-lucide="check-circle" class="w-4 h-4"></i><span>Sudah Dimiliki</span></button>
-        <button class="glass-btn-icon" onclick="editFromDetail()"><i data-lucide="pencil" class="w-4 h-4"></i></button>
-        <button class="glass-btn-icon danger-icon" onclick="deleteFromDetail()"><i data-lucide="trash-2"
-            class="w-4 h-4"></i></button>
+
+      <!-- Modal Body (2 Columns Desktop, 1 Column Mobile) -->
+      <div class="p-5 sm:p-7 overflow-y-auto max-h-[82vh]">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+          
+          <!-- LEFT: Large Portrait Poster Hero (Artwork Floating on Glass) -->
+          <div class="md:col-span-5 flex flex-col items-center">
+            <div id="detail-poster-wrap" class="detail-poster-wrap relative w-full aspect-[3/5.2] max-w-[270px] rounded-2xl overflow-hidden bg-black/40">
+              <!-- Poster Image with exact custom framing -->
+              <img id="detail-image" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" alt="Skin Poster" />
+              
+              <!-- Placeholder Fallback -->
+              <div id="detail-placeholder" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center hidden">
+                <span id="detail-placeholder-icon" class="text-6xl filter drop-shadow-lg mb-2"></span>
+                <span id="detail-placeholder-label" class="text-xs font-extrabold uppercase tracking-widest text-secondary"></span>
+              </div>
+
+              <!-- Top Left Floating Badges -->
+              <div class="absolute top-3 left-3 z-10 flex items-center gap-2">
+                <span id="detail-rarity-badge" class="rarity-badge"></span>
+              </div>
+
+              <!-- Top Right Status Badge -->
+              <div class="absolute top-3 right-3 z-10">
+                <span id="detail-status-badge" class="status-badge"></span>
+              </div>
+
+              <!-- Subtle Ambient Gradient Overlay at Bottom -->
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
+            </div>
+          </div>
+
+          <!-- RIGHT: Skin Identity, Metadata, Notes, & Actions -->
+          <div class="md:col-span-7 flex flex-col justify-between space-y-5">
+            <div>
+              <!-- Hero & Skin Name -->
+              <div id="detail-hero-name" class="text-[11px] font-bold uppercase tracking-widest text-accent mb-1">HERO</div>
+              <h2 id="detail-skin-name" class="font-extrabold text-2xl sm:text-3xl text-primary tracking-tight leading-tight" style="font-family:'Outfit',sans-serif;">Skin Name</h2>
+              
+              <!-- Price & Priority (Clean Spacing, No Rigid Boxes) -->
+              <div class="mt-3 flex items-center gap-4 flex-wrap">
+                <div id="detail-price-box" class="flex items-baseline gap-1.5">
+                  <span id="detail-price-val" class="font-extrabold text-2xl text-accent leading-none" style="font-family:'Outfit',sans-serif;">0</span>
+                  <span class="text-xs font-semibold text-tertiary">Token</span>
+                </div>
+                <div class="w-1 h-1 rounded-full bg-divider"></div>
+                <div id="detail-priority-box" class="flex items-center gap-1.5 text-xs font-medium text-secondary">
+                  <span id="detail-priority-dot" class="priority-dot"></span>
+                  <span id="detail-priority-label">Sedang</span>
+                </div>
+              </div>
+
+              <!-- Metadata (Spacious, Unboxed, Distinct Columns) -->
+              <div class="mt-4 grid grid-cols-2 gap-4 py-3.5 border-y border-divider">
+                <div>
+                  <div class="text-[10px] uppercase font-semibold text-tertiary tracking-wider mb-1">Ketersediaan</div>
+                  <div id="detail-availability-text" class="text-xs font-semibold text-primary flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Tersedia
+                  </div>
+                </div>
+                <div>
+                  <div class="text-[10px] uppercase font-semibold text-tertiary tracking-wider mb-1">Status Kepemilikan</div>
+                  <div id="detail-ownership-status-text" class="text-xs font-semibold text-primary flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-tertiary"></span> Belum Dimiliki
+                  </div>
+                </div>
+                <div class="col-span-2 flex flex-col gap-1 text-[11px] text-tertiary pt-1">
+                  <div id="detail-created-row" class="flex items-center gap-1.5">
+                    <i data-lucide="calendar" class="w-3.5 h-3.5 opacity-60"></i>
+                    <span>Ditambahkan <span id="detail-created-text" class="text-secondary font-medium"></span></span>
+                  </div>
+                  <div id="detail-owned-row" class="flex items-center gap-1.5 text-emerald-400/90 hidden">
+                    <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                    <span>Dimiliki sejak <span id="detail-owned-text" class="font-medium"></span></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Notes (Soft Subtle Text, No Heavy Nested Box) -->
+              <div id="detail-notes-wrap" class="hidden mt-4 pt-1">
+                <div class="text-[10px] font-semibold text-tertiary uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                  <i data-lucide="sticky-note" class="w-3.5 h-3.5 opacity-60"></i> Catatan Skin
+                </div>
+                <p id="detail-notes-text" class="text-xs text-secondary leading-relaxed whitespace-pre-line"></p>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="pt-4 space-y-2.5">
+              <!-- Primary Action: Ownership Toggle -->
+              <button id="detail-ownership-cta" class="w-full py-3 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all duration-200" onclick="togglePurchasedFromDetail()">
+                <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                <span id="detail-ownership-cta-text">Tandai Sudah Dimiliki</span>
+              </button>
+
+              <!-- Secondary Actions: Edit and Delete -->
+              <div class="flex items-center gap-2.5">
+                <button class="glass-btn-ghost flex-1 py-2.5 text-xs font-semibold justify-center gap-1.5" onclick="editFromDetail()">
+                  <i data-lucide="pencil" class="w-3.5 h-3.5 opacity-70"></i> Edit Skin
+                </button>
+                <button class="glass-btn-ghost px-4 py-2.5 text-xs font-semibold text-red-400 hover:text-red-300 justify-center gap-1.5" onclick="deleteFromDetail()">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5 text-red-400/80"></i> Hapus
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
       </div>
     </div>
     <form method="dialog" class="modal-backdrop"><button>close</button></form>
@@ -521,7 +669,7 @@
 
       <!-- Logged Out View -->
       <div id="cloud-user-logged-out" class="space-y-4">
-        <div class="p-4 rounded-2xl bg-surface border border-glass text-center space-y-3">
+        <div class="p-4 rounded-2xl bg-surface text-center space-y-3">
           <p class="text-xs text-secondary leading-relaxed">Hubungkan dengan **Google Sign-In** untuk menyimpan wishlist
             kamu di Cloud Database Firebase secara gratis & real-time.</p>
           <button onclick="loginGoogle()" class="glass-btn-primary w-full justify-center gap-2 py-2.5">
@@ -532,8 +680,8 @@
 
       <!-- Logged In View -->
       <div id="cloud-user-logged-in" class="space-y-4 hidden">
-        <div class="flex items-center gap-3 p-3.5 rounded-2xl bg-surface border border-glass">
-          <img id="user-avatar" class="w-10 h-10 rounded-full border border-glass" src="" alt="Avatar" />
+        <div class="flex items-center gap-3 p-3.5 rounded-2xl bg-surface">
+          <img id="user-avatar" class="w-10 h-10 rounded-full" src="" alt="Avatar" />
           <div class="flex-1 min-w-0">
             <h4 id="user-name" class="font-bold text-sm truncate">User Name</h4>
             <p id="user-email" class="text-xs text-tertiary truncate">user@gmail.com</p>
@@ -570,55 +718,27 @@
     <form method="dialog" class="modal-backdrop"><button>close</button></form>
   </dialog>
 
-  <!-- ===== LIQUID GLASS ACTION SHEET MODAL ===== -->
-  <dialog id="card-menu-modal" class="modal modal-bottom sm:modal-middle">
-    <div class="glass-modal max-w-sm w-full p-5 text-left space-y-4 border border-glass shadow-2xl backdrop-blur-2xl">
-      <div class="flex items-center justify-between pb-3 border-b border-divider">
-        <div class="min-w-0 flex-1 pr-2">
-          <div id="card-menu-hero" class="text-[10px] font-extrabold uppercase tracking-widest accent-text">HERO NAME
-          </div>
-          <h4 id="card-menu-title" class="font-extrabold text-base text-primary truncate">Skin Name</h4>
-        </div>
-        <button class="glass-btn-icon text-xs w-8 h-8 rounded-full shrink-0"
-          onclick="document.getElementById('card-menu-modal').close()">
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
-      </div>
+  <!-- ===== ANCHORED CONTEXTUAL MENU FOR SKIN CARD ===== -->
+  <div id="card-context-menu" class="card-context-menu hidden" role="menu" aria-label="Menu Opsi Skin">
+    <div class="space-y-0.5">
+      <button id="context-menu-edit-btn" class="context-menu-item" role="menuitem">
+        <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+        <span>Edit Skin</span>
+      </button>
 
-      <div class="space-y-2.5">
-        <button id="card-menu-edit-btn" class="liquid-menu-btn text-xs w-full">
-          <div class="menu-icon-wrap accent-bg-soft"><i data-lucide="pencil" class="w-4 h-4 accent-text"></i></div>
-          <div class="flex-1 text-left">
-            <div class="font-bold text-primary">Edit Skin</div>
-            <div class="text-[10px] text-tertiary">Ubah nama, harga, rarity atau gambar</div>
-          </div>
-          <i data-lucide="chevron-right" class="w-4 h-4 text-tertiary"></i>
-        </button>
+      <button id="context-menu-toggle-btn" class="context-menu-item" role="menuitem">
+        <i id="context-menu-toggle-icon" data-lucide="check" class="w-3.5 h-3.5"></i>
+        <span id="context-menu-toggle-text">Tandai Sudah Dimiliki</span>
+      </button>
 
-        <button id="card-menu-toggle-btn" class="liquid-menu-btn text-xs w-full">
-          <div class="menu-icon-wrap bg-emerald-500/15 text-emerald-400" id="card-menu-toggle-icon"><i
-              data-lucide="check" class="w-4 h-4 text-emerald-400"></i></div>
-          <div class="flex-1 text-left">
-            <div class="font-bold text-primary" id="card-menu-toggle-text">Tandai Sudah Dimiliki</div>
-            <div class="text-[10px] text-tertiary">Ubah status kepemilikan skin</div>
-          </div>
-          <i data-lucide="chevron-right" class="w-4 h-4 text-tertiary"></i>
-        </button>
+      <div class="context-menu-divider"></div>
 
-        <button id="card-menu-delete-btn"
-          class="liquid-menu-btn text-xs w-full border-red-500/20 hover:border-red-500/50">
-          <div class="menu-icon-wrap bg-red-500/15 text-red-400"><i data-lucide="trash-2"
-              class="w-4 h-4 text-red-400"></i></div>
-          <div class="flex-1 text-left">
-            <div class="font-bold text-red-400">Hapus Skin</div>
-            <div class="text-[10px] text-red-400/60">Hapus skin ini dari wishlist</div>
-          </div>
-          <i data-lucide="chevron-right" class="w-4 h-4 text-red-400/50"></i>
-        </button>
-      </div>
+      <button id="context-menu-delete-btn" class="context-menu-item danger" role="menuitem">
+        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+        <span>Hapus Skin</span>
+      </button>
     </div>
-    <form method="dialog" class="modal-backdrop"><button>close</button></form>
-  </dialog>
+  </div>
 
   <!-- Toast -->
   <div id="toast-container" class="fixed bottom-6 right-6 z-[100] flex flex-col gap-2 items-end"></div>
