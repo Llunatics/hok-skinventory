@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Cinzel:wght@600;700;800;900&display=swap"
     rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <link rel="stylesheet" href="css/variables.css" />
@@ -25,6 +25,7 @@
   <link rel="stylesheet" href="css/cards.css" />
   <link rel="stylesheet" href="css/modals.css" />
   <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/vault.css" />
 </head>
 
 <body>
@@ -37,6 +38,7 @@
     <div class="orb orb-3"></div>
     <div class="particles" id="particles"></div>
   </div>
+  <div class="bg-vignette"></div>
 
   <!-- ===== FLOATING CAPSULE NAVBAR ===== -->
   <div class="fixed top-4 left-0 right-0 z-50 px-4 sm:px-6 pointer-events-none">
@@ -176,6 +178,21 @@
     </div>
   </header>
 
+  <!-- ===== FEATURED: INCARAN UTAMA ===== -->
+  <section id="featured-section" class="hidden relative z-10 px-4 lg:px-8 mt-1">
+    <div class="max-w-7xl mx-auto">
+      <div class="featured-head">
+        <div class="ornament-line"></div>
+        <div class="featured-title-wrap">
+          <i data-lucide="flame" class="w-4 h-4"></i>
+          <h2 class="featured-title">Incaran Utama</h2>
+        </div>
+        <div class="ornament-line"></div>
+      </div>
+      <div id="featured-row" class="featured-row"></div>
+    </div>
+  </section>
+
   <!-- ===== MAIN ===== -->
   <main class="relative z-10 px-4 lg:px-8 pb-28">
     <div class="max-w-7xl mx-auto">
@@ -251,6 +268,15 @@
             class="w-3.5 h-3.5"></i> Wishlist</button>
         <button id="m-owned" class="mobile-tab" onclick="setFilter('purchased')"><i data-lucide="gem"
             class="w-3.5 h-3.5"></i> Dimiliki</button>
+      </div>
+
+      <!-- Vault divider -->
+      <div class="vault-divider" aria-hidden="true">
+        <span class="vd-line"></span>
+        <span class="vd-diamond"></span>
+        <span class="vd-text">Arsip Skin</span>
+        <span class="vd-diamond"></span>
+        <span class="vd-line"></span>
       </div>
 
       <!-- Grid / List Container -->

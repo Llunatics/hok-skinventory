@@ -1,0 +1,661 @@
+/* ═══════════════════════════════════════════════════════════════
+   HoK Vault — "Imperial Vault" Epic Layer
+   Honor of Kings collection aesthetic: deep dark, gold + jade,
+   ornamental-but-tasteful. Loaded LAST to layer over the glass system.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ───────────── DISPLAY TYPE ───────────── */
+
+.font-display, .hero-title, .logo-text, .featured-title, .featured-rank,
+.stat-number, .empty-title, .vd-text, .seal-text {
+  font-family: 'Cinzel', 'Outfit', serif;
+}
+
+/* Metallic gold text — used sparingly */
+.gold-text {
+  background: linear-gradient(135deg, #fbe9a7 0%, #f0b429 42%, #c07f14 68%, #f6d876 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ───────────── RARITY COLOR TOKENS ───────────── */
+
+.skin-card { --rc: #9aa7b8; --rc-soft: rgba(154,167,184,.14); }
+.skin-card[data-rarity="rare"] { --rc: #5b9cf5; --rc-soft: rgba(91,156,245,.14); }
+.skin-card[data-rarity="epic"] { --rc: #a579f0; --rc-soft: rgba(165,121,240,.14); }
+.skin-card[data-rarity="epic_limited"] { --rc: #c084fc; --rc-soft: rgba(192,132,252,.16); }
+.skin-card[data-rarity="legend"] { --rc: #f0b429; --rc-soft: rgba(240,180,41,.14); }
+.skin-card[data-rarity="legend_limited"] { --rc: #ffd34d; --rc-soft: rgba(255,211,77,.16); }
+.skin-card[data-rarity="precious"] { --rc: #f06ba8; --rc-soft: rgba(240,107,168,.14); }
+.skin-card[data-rarity="flawless"] { --rc: #2dd4bf; --rc-soft: rgba(45,212,191,.14); }
+.skin-card[data-rarity="treasure_flawless"] { --rc: #f0b429; --rc-soft: rgba(240,180,41,.14); }
+.skin-card[data-rarity="mythic"] { --rc: #f26d6d; --rc-soft: rgba(242,109,109,.15); }
+
+/* ───────────── RARITY FRAME ───────────── */
+
+.skin-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  border-radius: inherit;
+  border: 1px solid color-mix(in srgb, var(--rc) 32%, transparent);
+  pointer-events: none;
+  transition: border-color .35s ease;
+}
+
+/* Gem strip — in-game style rarity bar */
+.skin-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 14%;
+  right: 14%;
+  height: 2px;
+  z-index: 31;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--rc) 25%, var(--rc) 75%, transparent);
+  opacity: .9;
+  pointer-events: none;
+}
+
+.skin-card:hover {
+  border-color: color-mix(in srgb, var(--rc) 45%, transparent);
+  box-shadow: var(--glass-shadow-hover),
+    0 0 28px -8px color-mix(in srgb, var(--rc) 40%, transparent);
+}
+
+/* ───────────── PRESTIGE TIERS: corner filigree ───────────── */
+
+.skin-card[data-rarity="legend_limited"]::before,
+.skin-card[data-rarity="precious"]::before,
+.skin-card[data-rarity="flawless"]::before,
+.skin-card[data-rarity="treasure_flawless"]::before,
+.skin-card[data-rarity="mythic"]::before {
+  border-color: color-mix(in srgb, var(--rc) 55%, transparent);
+  background-image:
+    linear-gradient(var(--rc), var(--rc)),
+    linear-gradient(var(--rc), var(--rc)),
+    linear-gradient(var(--rc), var(--rc)),
+    linear-gradient(var(--rc), var(--rc)),
+    linear-gradient(var(--rc), var(--rc)),
+    linear-gradient(var(--rc), var(--rc)),
+    linear-gradient(var(--rc), var(--rc)),
+    linear-gradient(var(--rc), var(--rc));
+  background-size:
+    20px 2px, 2px 20px,
+    20px 2px, 2px 20px,
+    20px 2px, 2px 20px,
+    20px 2px, 2px 20px;
+  background-position:
+    7px 7px, 7px 7px,
+    calc(100% - 7px) 7px, calc(100% - 7px) 7px,
+    7px calc(100% - 7px), 7px calc(100% - 7px),
+    calc(100% - 7px) calc(100% - 7px), calc(100% - 7px) calc(100% - 7px);
+  background-repeat: no-repeat;
+  opacity: .9;
+}
+
+/* Treasure Flawless: prismatic shimmer on the frame */
+.skin-card[data-rarity="treasure_flawless"]::before {
+  border-color: transparent;
+  background:
+    linear-gradient(var(--glass-bg), var(--glass-bg)) padding-box,
+    linear-gradient(135deg, #f0b429, #2dd4bf, #f0b429) border-box;
+  border: 1px solid transparent;
+  background-size: auto, 220% 220%;
+  animation: prismShift 7s ease-in-out infinite;
+}
+
+@keyframes prismShift {
+  0%, 100% { background-position: 0 0, 0% 40%; }
+  50% { background-position: 0 0, 100% 60%; }
+}
+
+/* Sheen sweep on hover for prestige tiers */
+.skin-card .sheen {
+  position: absolute;
+  inset: -20%;
+  z-index: 12;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(105deg,
+    transparent 42%,
+    rgba(255, 255, 255, .16) 50%,
+    transparent 58%);
+  transform: translateX(-60%) rotate(0.001deg);
+}
+
+.skin-card:hover .sheen {
+  opacity: 1;
+  animation: sheenSweep 1.15s cubic-bezier(.4,0,.2,1);
+}
+
+@keyframes sheenSweep {
+  0% { transform: translateX(-60%); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translateX(60%); opacity: 0; }
+}
+
+/* ───────────── OWNED: wax seal ───────────── */
+
+.owned-badge {
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border-radius: 50%;
+  flex-direction: column;
+  gap: 1px;
+  top: 8px;
+  right: 8px;
+  font-size: 7px;
+  letter-spacing: .08em;
+  color: #3a2503;
+  background: radial-gradient(circle at 34% 28%, #ffedaa 0%, #f0b429 52%, #9c6208 100%);
+  border: 2px solid rgba(255, 243, 200, .65);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, .55),
+    inset 0 0 0 3px rgba(122, 72, 4, .28),
+    inset 0 2px 3px rgba(255, 255, 255, .5);
+  transform: rotate(-10deg);
+  text-transform: uppercase;
+}
+
+.owned-badge svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 3;
+}
+
+.owned-badge .seal-text {
+  font-weight: 800;
+  font-size: 6.5px;
+}
+
+/* ───────────── PLACEHOLDER POSTER ───────────── */
+
+.skin-card-placeholder {
+  background:
+    radial-gradient(circle at 50% 32%, var(--rc-soft) 0%, transparent 62%),
+    var(--bg-elevated);
+}
+
+.skin-card-placeholder-icon {
+  color: var(--rc);
+  opacity: .92;
+  font-size: clamp(2rem, 12cqi, 2.9rem);
+  filter: drop-shadow(0 0 14px color-mix(in srgb, var(--rc) 55%, transparent));
+}
+
+.skin-card-placeholder::after {
+  content: 'HoK VAULT';
+  position: absolute;
+  bottom: 26%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-size: clamp(6px, 3cqi, 8px);
+  font-weight: 700;
+  letter-spacing: .42em;
+  text-indent: .42em;
+  color: color-mix(in srgb, var(--rc) 60%, transparent);
+  opacity: .55;
+}
+
+/* ───────────── TOPBAR REFINEMENT ───────────── */
+
+.glass-nav::after {
+  content: '';
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-40), transparent);
+  pointer-events: none;
+}
+
+.logo-text {
+  font-size: 1.28rem;
+  font-weight: 800;
+  letter-spacing: .02em;
+}
+
+.logo-icon {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, var(--accent-20), var(--accent-08));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18);
+}
+
+/* ───────────── HERO ───────────── */
+
+.hero-title {
+  font-weight: 800;
+  font-size: clamp(2.1rem, 5vw, 3.4rem);
+  letter-spacing: .01em;
+  line-height: 1.12;
+}
+
+.hero-title .accent-text {
+  background: linear-gradient(120deg, #fbe9a7 0%, #f0b429 40%, #c07f14 65%, #f6d876 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-eyebrow {
+  position: relative;
+}
+
+.glass-badge {
+  border: 1px solid var(--accent-20);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06);
+}
+
+/* ───────────── STATS ───────────── */
+
+.stat-number {
+  font-weight: 700;
+  font-size: 1.65rem;
+  letter-spacing: .02em;
+}
+
+.glass-stat {
+  overflow: hidden;
+}
+
+.glass-stat::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 18px;
+  right: 18px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-40), transparent);
+}
+
+/* ───────────── FEATURED: INCARAN UTAMA ───────────── */
+
+.featured-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 6px 0 14px;
+}
+
+.ornament-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-20));
+}
+
+.ornament-line:last-child {
+  background: linear-gradient(90deg, var(--accent-20), transparent);
+}
+
+.featured-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.featured-title {
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.featured-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 860px) {
+  .featured-row {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 6px;
+    margin: 0 -16px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .featured-card {
+    min-width: min(78vw, 320px);
+    scroll-snap-align: start;
+  }
+}
+
+.featured-card { --rc: #9aa7b8; --rc-soft: rgba(154,167,184,.14); }
+.featured-card[data-rarity="rare"] { --rc: #5b9cf5; --rc-soft: rgba(91,156,245,.14); }
+.featured-card[data-rarity="epic"] { --rc: #a579f0; --rc-soft: rgba(165,121,240,.14); }
+.featured-card[data-rarity="epic_limited"] { --rc: #c084fc; --rc-soft: rgba(192,132,252,.16); }
+.featured-card[data-rarity="legend"] { --rc: #f0b429; --rc-soft: rgba(240,180,41,.14); }
+.featured-card[data-rarity="legend_limited"] { --rc: #ffd34d; --rc-soft: rgba(255,211,77,.16); }
+.featured-card[data-rarity="precious"] { --rc: #f06ba8; --rc-soft: rgba(240,107,168,.14); }
+.featured-card[data-rarity="flawless"] { --rc: #2dd4bf; --rc-soft: rgba(45,212,191,.14); }
+.featured-card[data-rarity="treasure_flawless"] { --rc: #f0b429; --rc-soft: rgba(240,180,41,.14); }
+.featured-card[data-rarity="mythic"] { --rc: #f26d6d; --rc-soft: rgba(242,109,109,.15); }
+
+.featured-card {
+  position: relative;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 16px 14px 14px;
+  border-radius: var(--radius-xl);
+  background: var(--glass-bg-elevated);
+  backdrop-filter: blur(var(--blur-lg)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--blur-lg)) saturate(160%);
+  border: 1px solid color-mix(in srgb, var(--rc) 30%, transparent);
+  box-shadow: var(--glass-shadow);
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s ease, border-color .3s ease;
+  animation: cardReveal .5s cubic-bezier(.16,1,.3,1) both;
+}
+
+.featured-card:nth-child(2) { animation-delay: .07s; }
+.featured-card:nth-child(3) { animation-delay: .14s; }
+
+.featured-card:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--rc) 55%, transparent);
+  box-shadow: var(--glass-shadow-hover), 0 0 26px -8px color-mix(in srgb, var(--rc) 45%, transparent);
+}
+
+.featured-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 16px;
+  right: 16px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--rc), transparent);
+}
+
+.featured-rank {
+  position: absolute;
+  top: 2px;
+  right: 12px;
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--rc) 55%, transparent);
+  opacity: .8;
+  pointer-events: none;
+}
+
+.featured-thumb {
+  position: relative;
+  width: 76px;
+  height: 104px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--bg-elevated);
+  border: 1px solid color-mix(in srgb, var(--rc) 30%, transparent);
+}
+
+.featured-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.featured-thumb .thumb-glyph {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.7rem;
+  color: var(--rc);
+  background: radial-gradient(circle at 50% 35%, var(--rc-soft), transparent 65%);
+}
+
+.featured-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.featured-hero {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.featured-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.02rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.25;
+  margin: 2px 0 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.featured-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.featured-price {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: .95rem;
+  color: var(--accent);
+}
+
+.featured-price small {
+  font-weight: 600;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  margin-left: 2px;
+}
+
+.featured-must {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #f87171;
+}
+
+/* ───────────── VAULT DIVIDER ───────────── */
+
+.vault-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 26px 0 16px;
+}
+
+.vd-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--glass-border-active));
+}
+
+.vd-line:last-child {
+  background: linear-gradient(90deg, var(--glass-border-active), transparent);
+}
+
+.vd-diamond {
+  width: 7px;
+  height: 7px;
+  transform: rotate(45deg);
+  background: var(--accent-40);
+  border: 1px solid var(--accent-40);
+  flex-shrink: 0;
+}
+
+.vd-text {
+  font-size: .8rem;
+  font-weight: 700;
+  letter-spacing: .3em;
+  text-indent: .3em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+/* ───────────── BUTTONS: minted-gold primary ───────────── */
+
+.glass-btn-primary {
+  background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 55%, var(--accent-dark) 130%);
+  box-shadow: 0 6px 20px -6px var(--accent-40), inset 0 1px 0 rgba(255, 255, 255, .35);
+  border: 1px solid color-mix(in srgb, var(--accent-dark) 45%, transparent);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, .35) 50%, transparent 60%);
+  transform: translateX(-120%);
+  transition: transform .6s ease;
+  pointer-events: none;
+}
+
+.glass-btn-primary:hover::after {
+  transform: translateX(120%);
+}
+
+.glass-btn-primary:hover {
+  transform: translateY(-1.5px);
+  box-shadow: 0 10px 26px -6px var(--accent-40), inset 0 1px 0 rgba(255, 255, 255, .35);
+}
+
+/* ───────────── BACKGROUND: gold + jade ambience ───────────── */
+
+.bg-mesh {
+  background:
+    radial-gradient(ellipse 70% 50% at 15% 22%, var(--accent-08) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 60% at 88% 78%, rgba(45, 212, 191, 0.045) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 50% 55%, rgba(240, 180, 41, 0.03) 0%, transparent 60%);
+}
+
+.orb-2 { background: radial-gradient(circle, rgba(45, 212, 191, 0.10), transparent 70%); }
+.orb-3 { background: radial-gradient(circle, rgba(240, 180, 41, 0.09), transparent 70%); }
+
+.bg-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 95% 75% at 50% 38%, transparent 52%, rgba(0, 0, 0, .52) 100%);
+  z-index: 1;
+}
+
+[data-scheme="light"] .bg-vignette {
+  background: radial-gradient(ellipse 95% 75% at 50% 38%, transparent 60%, rgba(15, 23, 42, .08) 100%);
+}
+
+/* ───────────── DETAIL MODAL ───────────── */
+
+#detail-skin-name {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  letter-spacing: .015em;
+}
+
+#detail-poster-wrap {
+  border: 1px solid var(--glass-border);
+}
+
+#detail-poster-wrap[data-rarity="legend"] { --rc: #f0b429; }
+#detail-poster-wrap[data-rarity="legend_limited"] { --rc: #ffd34d; }
+#detail-poster-wrap[data-rarity="precious"] { --rc: #f06ba8; }
+#detail-poster-wrap[data-rarity="flawless"] { --rc: #2dd4bf; }
+#detail-poster-wrap[data-rarity="treasure_flawless"] { --rc: #f0b429; }
+#detail-poster-wrap[data-rarity="mythic"] { --rc: #f26d6d; }
+#detail-poster-wrap[data-rarity="epic"] { --rc: #a579f0; }
+#detail-poster-wrap[data-rarity="epic_limited"] { --rc: #c084fc; }
+#detail-poster-wrap[data-rarity="rare"] { --rc: #5b9cf5; }
+#detail-poster-wrap[data-rarity="basic"] { --rc: #9aa7b8; }
+
+#detail-poster-wrap[data-rarity]::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  border-radius: inherit;
+  border: 1px solid color-mix(in srgb, var(--rc) 45%, transparent);
+  pointer-events: none;
+}
+
+#detail-price-val {
+  font-family: 'Cinzel', serif;
+}
+
+/* ───────────── EMPTY STATES ───────────── */
+
+.empty-ring {
+  width: 84px;
+  height: 84px;
+  background: radial-gradient(circle at 50% 35%, var(--accent-15), var(--input-bg) 70%);
+  border: 1px solid var(--accent-20);
+  color: var(--accent);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), 0 10px 30px -10px var(--accent-20);
+}
+
+.empty-title {
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+
+/* ───────────── LIST MODE polish ───────────── */
+
+#items-grid[data-layout="list"] .skin-card {
+  border: 1px solid var(--glass-border);
+}
+
+#items-grid[data-layout="list"] .skin-card::before {
+  border: none;
+  border-left: 2px solid var(--rc);
+  border-radius: 0;
+  inset: 10px auto 10px 0;
+  width: 2px;
+  opacity: .8;
+}
+
+#items-grid[data-layout="list"] .skin-card::after {
+  display: none;
+}
+
+/* ───────────── REDUCED MOTION ───────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .skin-card, .featured-card, .orb, .particle, .pulse-dot {
+    animation: none !important;
+  }
+  .skin-card .sheen, .glass-btn-primary::after {
+    display: none !important;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}

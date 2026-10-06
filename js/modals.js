@@ -73,6 +73,9 @@ function openDetail(id) {
   if (heroNameEl) heroNameEl.textContent = item.hero;
   if (skinNameEl) skinNameEl.textContent = item.name && item.name.trim() ? item.name : item.hero;
 
+  // Rarity frame on the poster
+  if (posterWrap) posterWrap.dataset.rarity = item.rarity;
+
   // Price
   if (priceValEl) {
     if (item.price && item.price > 0) {

@@ -99,6 +99,60 @@ function renderItems() {
 
   lucide.createIcons();
   updateStats();
+  renderFeatured();
+}
+
+// ---- Featured: Incaran Utama (must-have, not owned) ----
+function renderFeatured() {
+  const section = document.getElementById('featured-section');
+  const row = document.getElementById('featured-row');
+  if (!section || !row) return;
+
+  const feats = wishlist
+    .filter(i => i.priority === 'must' && !i.owned)
+    .sort((a, b) =>
+      ((RARITIES[a.rarity] || {}).order ?? 9) - ((RARITIES[b.rarity] || {}).order ?? 9) ||
+      (b.price || 0) - (a.price || 0))
+    .slice(0, 3);
+
+  if (!feats.length) {
+    section.classList.add('hidden');
+    return;
+  }
+  section.classList.remove('hidden');
+
+  row.innerHTML = feats.map((item, idx) => {
+    const rar = RARITIES[item.rarity] || RARITIES.epic;
+    const hasImg = item.image && item.image.trim();
+    const scale = (item.imageScale || 100) / 100;
+    const posX = item.imagePosX !== undefined ? item.imagePosX : 50;
+    const posY = item.imagePosY !== undefined ? item.imagePosY : (item.imagePos !== undefined ? item.imagePos : 15);
+    const imgStyle = `object-position: ${posX}% ${posY}%; transform: scale(${scale}); transform-origin: ${posX}% ${posY}%;`;
+    return `
+      <div class="featured-card" data-rarity="${item.rarity}"
+           tabindex="0" role="button" aria-label="Detail skin ${escapeHtml(item.hero)}"
+           onclick="openDetail('${item.id}')"
+           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openDetail('${item.id}');}">
+        <span class="featured-rank">0${idx + 1}</span>
+        <div class="featured-thumb">
+          ${hasImg
+            ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name || item.hero)}" loading="lazy" style="${imgStyle}"
+                 onerror="this.outerHTML='<span class=\\'thumb-glyph\\'>${rar.icon}</span>'" />`
+            : `<span class="thumb-glyph">${rar.icon}</span>`}
+        </div>
+        <div class="featured-info">
+          <div class="featured-hero">${escapeHtml(item.hero)}</div>
+          <div class="featured-name">${escapeHtml(item.name && item.name.trim() ? item.name : item.hero)}</div>
+          <div class="featured-meta">
+            <span class="rarity-badge rb-${item.rarity}">${rar.icon} ${rar.label}</span>
+            ${item.price ? `<span class="featured-price">${formatPrice(item.price)}<small>Token</small></span>` : ''}
+            <span class="featured-must"><i data-lucide="flame" class="w-3 h-3"></i>Harus Punya</span>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  lucide.createIcons();
 }
 
 function renderCard(item) {
@@ -112,10 +166,12 @@ function renderCard(item) {
   const posX = item.imagePosX !== undefined ? item.imagePosX : 50;
   const posY = item.imagePosY !== undefined ? item.imagePosY : (item.imagePos !== undefined ? item.imagePos : 15);
   const imgStyle = `object-position: ${posX}% ${posY}%; transform: scale(${scale}); transform-origin: ${posX}% ${posY}%;`;
+  const isPrestige = ['legend_limited', 'precious', 'flawless', 'treasure_flawless', 'mythic'].includes(item.rarity);
 
   return `
     <div class="skin-card ${ownedCls}" data-rarity="${item.rarity}" tabindex="0" role="button" aria-label="Detail skin ${escapeHtml(item.hero)} - ${escapeHtml(item.name || item.hero)}" onclick="openDetail('${item.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){if(!event.target.closest('.card-menu-trigger')){event.preventDefault();openDetail('${item.id}');}}">
-      ${item.owned ? '<div class="owned-badge"><i data-lucide="check" class="w-3 h-3"></i> Dimiliki</div>' : ''}
+      ${item.owned ? '<div class="owned-badge"><i data-lucide="check"></i><span class="seal-text">Dimiliki</span></div>' : ''}
+      ${isPrestige ? '<div class="sheen"></div>' : ''}
 
       ${hasImg ? `
         <div class="skin-card-img">
