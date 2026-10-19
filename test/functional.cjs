@@ -1,7 +1,32 @@
 // HoK Skinventory — functional QA (Playwright, real clicks, no puppeteer needed).
 // Serves repo root on :8778 and drives the real UI end-to-end.
-const { chromium } = require("playwright-core");
-const CHROME = "/home/hatch/.cache/ms-playwright/chromium-1248/chrome-linux64/chrome";
+let chromium;
+try {
+  ({ chromium } = require("playwright-core"));
+} catch {
+  // Fallback: reuse the playwright-core installed for the siar test suite
+  ({ chromium } = require("/home/hatch/workspace/repos/siar/test/node_modules/playwright-core"));
+}
+const path = require("path");
+const fs = require("fs");
+// Auto-detect newest Playwright chromium (override via HOK_CHROME), mirroring
+// the approach in siar/test/chrome.js.
+function chromeExe() {
+  if (process.env.HOK_CHROME && fs.existsSync(process.env.HOK_CHROME)) return process.env.HOK_CHROME;
+  const cache = path.join(process.env.HOME || "/home/hatch", ".cache/ms-playwright");
+  try {
+    const builds = fs.readdirSync(cache).filter(d => d.startsWith("chromium-")).sort().reverse();
+    for (const b of builds) {
+      const exe = path.join(cache, b, "chrome-linux64/chrome");
+      if (fs.existsSync(exe)) return exe;
+    }
+  } catch {}
+  for (const p of ["/usr/bin/google-chrome-stable", "/usr/bin/chromium", "/usr/bin/chromium-browser"]) {
+    if (fs.existsSync(p)) return p;
+  }
+  throw new Error("No Chromium found (set HOK_CHROME)");
+}
+const CHROME = chromeExe();
 const URL = "http://127.0.0.1:8778/index.html";
 
 let pass = 0, fail = 0;
