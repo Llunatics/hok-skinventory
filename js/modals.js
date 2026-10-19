@@ -205,7 +205,7 @@ function openDetail(id) {
 
   modal.showModal();
   lockBodyScroll();
-  lucide.createIcons();
+  if (typeof lucide !== "undefined") lucide.createIcons();
 }
 
 function closeDetail() {
@@ -327,8 +327,8 @@ function importData(event) {
       }
       let n = 0;
       valid.forEach(i => {
-        if (!wishlist.find(w => w.id === i.id)) {
-          wishlist.push(i);
+        if (!wishlist.find(w => w.id === String(i.id).replace(/[^a-zA-Z0-9_-]/g, ''))) {
+          wishlist.push(sanitizeItem(i));
           n++;
         }
       });

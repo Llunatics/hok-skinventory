@@ -8,6 +8,35 @@ function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 }
 
+// Sanitize an item object coming from untrusted sources (JSON import,
+// cloud sync). Prevents stored-XSS via crafted id/rarity/status values that
+// are interpolated into HTML attributes and inline handlers at render time.
+function sanitizeItem(raw) {
+  const r = raw && typeof raw === 'object' ? raw : {};
+  const cleanId = String(r.id || '').replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 64);
+  const pick = (val, allowed, fallback) => allowed.includes(val) ? val : fallback;
+  const num = (val, fallback) => { const n = parseInt(val, 10); return Number.isNaN(n) ? fallback : n; };
+  // Legacy field: old exports used imagePos for vertical position
+  const posY = r.imagePosY !== undefined ? r.imagePosY : r.imagePos;
+  return {
+    id: cleanId || generateId(),
+    hero: String(r.hero || '').slice(0, 200),
+    name: String(r.name || '').slice(0, 200),
+    price: Math.max(0, num(r.price, 0)),
+    rarity: pick(r.rarity, Object.keys(RARITIES), 'epic'),
+    priority: pick(r.priority, Object.keys(PRIORITIES), 'medium'),
+    status: pick(r.status, Object.keys(STATUSES), 'available'),
+    image: String(r.image || '').slice(0, 2000),
+    imageScale: Math.min(300, Math.max(10, num(r.imageScale, 100))),
+    imagePosX: Math.min(100, Math.max(0, num(r.imagePosX, 50))),
+    imagePosY: Math.min(100, Math.max(0, num(posY, 15))),
+    notes: String(r.notes || '').slice(0, 2000),
+    owned: !!r.owned,
+    createdAt: r.createdAt || new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+}
+
 function formatPrice(num) {
   if (!num || num === 0) return '0';
   return Number(num).toLocaleString('id-ID');
@@ -33,10 +62,13 @@ function timeAgo(dateStr) {
 }
 
 function escapeHtml(str) {
-  if (!str) return '';
-  const d = document.createElement('div');
-  d.textContent = str;
-  return d.innerHTML;
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 // ---- Toast ----
@@ -51,7 +83,7 @@ function showToast(message, type = 'info') {
     <div class="toast-progress-bar"></div>
   `;
   c.appendChild(t);
-  lucide.createIcons();
+  if (typeof lucide !== "undefined") lucide.createIcons();
   setTimeout(() => t.remove(), 3000);
 }
 

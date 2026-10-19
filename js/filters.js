@@ -38,8 +38,8 @@ function getFilteredItems() {
 
   if (search) {
     items = items.filter(i =>
-      i.name.toLowerCase().includes(search) ||
-      i.hero.toLowerCase().includes(search) ||
+      (i.name || '').toLowerCase().includes(search) ||
+      (i.hero || '').toLowerCase().includes(search) ||
       (i.notes && i.notes.toLowerCase().includes(search))
     );
   }
@@ -50,7 +50,7 @@ function getFilteredItems() {
     case 'price-high': items.sort((a, b) => (b.price || 0) - (a.price || 0)); break;
     case 'price-low':  items.sort((a, b) => (a.price || 0) - (b.price || 0)); break;
     case 'priority':   items.sort((a, b) => (PRIORITIES[a.priority]?.order ?? 9) - (PRIORITIES[b.priority]?.order ?? 9)); break;
-    case 'name':       items.sort((a, b) => a.name.localeCompare(b.name)); break;
+    case 'name':       items.sort((a, b) => (a.name || '').localeCompare(b.name || '')); break;
   }
   return items;
 }

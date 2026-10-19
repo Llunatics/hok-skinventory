@@ -24,7 +24,7 @@ function openAddModal() {
       document.getElementById('form-hero')?.focus();
     }, 50);
   }
-  lucide.createIcons();
+  if (typeof lucide !== "undefined") lucide.createIcons();
 }
 
 function editItem(id) {
@@ -70,7 +70,7 @@ function editItem(id) {
       document.getElementById('form-hero')?.focus();
     }, 50);
   }
-  lucide.createIcons();
+  if (typeof lucide !== "undefined") lucide.createIcons();
 }
 
 function saveItem(event) {

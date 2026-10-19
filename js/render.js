@@ -97,7 +97,7 @@ function renderItems() {
     grid.innerHTML = filtered.map(renderCard).join('');
   }
 
-  lucide.createIcons();
+  if (typeof lucide !== "undefined") lucide.createIcons();
   updateStats();
   renderFeatured();
 }
@@ -129,10 +129,10 @@ function renderFeatured() {
     const posY = item.imagePosY !== undefined ? item.imagePosY : (item.imagePos !== undefined ? item.imagePos : 15);
     const imgStyle = `object-position: ${posX}% ${posY}%; transform: scale(${scale}); transform-origin: ${posX}% ${posY}%;`;
     return `
-      <div class="featured-card" data-rarity="${item.rarity}"
+      <div class="featured-card" data-rarity="${escapeHtml(item.rarity)}"
            tabindex="0" role="button" aria-label="Detail skin ${escapeHtml(item.hero)}"
-           onclick="openDetail('${item.id}')"
-           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openDetail('${item.id}');}">
+           onclick="openDetail('${escapeHtml(item.id)}')"
+           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openDetail('${escapeHtml(item.id)}');}">
         <span class="featured-rank">0${idx + 1}</span>
         <div class="featured-thumb">
           ${hasImg
@@ -144,7 +144,7 @@ function renderFeatured() {
           <div class="featured-hero">${escapeHtml(item.hero)}</div>
           <div class="featured-name">${escapeHtml(item.name && item.name.trim() ? item.name : item.hero)}</div>
           <div class="featured-meta">
-            <span class="rarity-badge rb-${item.rarity}">${rar.icon} ${rar.label}</span>
+            <span class="rarity-badge rb-${escapeHtml(item.rarity)}">${rar.icon} ${rar.label}</span>
             ${item.price ? `<span class="featured-price">${formatPrice(item.price)}<small>Token</small></span>` : ''}
             <span class="featured-must"><i data-lucide="flame" class="w-3 h-3"></i>Harus Punya</span>
           </div>
@@ -152,7 +152,7 @@ function renderFeatured() {
       </div>`;
   }).join('');
 
-  lucide.createIcons();
+  if (typeof lucide !== "undefined") lucide.createIcons();
 }
 
 function renderCard(item) {
@@ -169,17 +169,17 @@ function renderCard(item) {
   const isPrestige = ['legend_limited', 'precious', 'flawless', 'treasure_flawless', 'mythic'].includes(item.rarity);
 
   return `
-    <div class="skin-card ${ownedCls}" data-rarity="${item.rarity}" tabindex="0" role="button" aria-label="Detail skin ${escapeHtml(item.hero)} - ${escapeHtml(item.name || item.hero)}" onclick="openDetail('${item.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){if(!event.target.closest('.card-menu-trigger')){event.preventDefault();openDetail('${item.id}');}}">
+    <div class="skin-card ${ownedCls}" data-rarity="${escapeHtml(item.rarity)}" tabindex="0" role="button" aria-label="Detail skin ${escapeHtml(item.hero)} - ${escapeHtml(item.name || item.hero)}" onclick="openDetail('${escapeHtml(item.id)}')" onkeydown="if(event.key==='Enter'||event.key===' '){if(!event.target.closest('.card-menu-trigger')){event.preventDefault();openDetail('${escapeHtml(item.id)}');}}">
       ${item.owned ? '<div class="owned-badge"><i data-lucide="check"></i><span class="seal-text">Dimiliki</span></div>' : ''}
       ${isPrestige ? '<div class="sheen"></div>' : ''}
 
       ${hasImg ? `
         <div class="skin-card-img">
           <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name || item.hero)}" loading="lazy" style="${imgStyle}"
-               onerror="this.closest('.skin-card-img').outerHTML='<div class=\\'skin-card-placeholder\\' data-r=\\'${item.rarity}\\'><span class=\\'skin-card-placeholder-icon\\'>${rar.icon}</span></div>'" />
+               onerror="this.closest('.skin-card-img').outerHTML='<div class=\\'skin-card-placeholder\\' data-r=\\'${escapeHtml(item.rarity)}\\'><span class=\\'skin-card-placeholder-icon\\'>${rar.icon}</span></div>'" />
         </div>
       ` : `
-        <div class="skin-card-placeholder" data-r="${item.rarity}">
+        <div class="skin-card-placeholder" data-r="${escapeHtml(item.rarity)}">
           <span class="skin-card-placeholder-icon">${rar.icon}</span>
         </div>
       `}
@@ -191,8 +191,8 @@ function renderCard(item) {
             <div class="skin-card-name">${escapeHtml(item.name && item.name.trim() ? item.name : item.hero)}</div>
             
             <div class="flex items-center gap-1.5 flex-wrap mt-1">
-              <span class="rarity-badge rb-${item.rarity}">${rar.icon} ${rar.label}</span>
-              <span class="priority-dot pd-${item.priority}" title="${pri.label}"></span>
+              <span class="rarity-badge rb-${escapeHtml(item.rarity)}">${rar.icon} ${rar.label}</span>
+              <span class="priority-dot pd-${escapeHtml(item.priority)}" title="${pri.label}"></span>
               ${item.price ? `<span class="skin-card-price">${formatPrice(item.price)} <span class="price-unit">Token</span></span>` : ''}
             </div>
           </div>
@@ -202,7 +202,7 @@ function renderCard(item) {
                   title="Menu Opsi Skin"
                   aria-label="Menu opsi skin"
                   aria-haspopup="true"
-                  onclick="openCardMenu(event, '${item.id}')">
+                  onclick="openCardMenu(event, '${escapeHtml(item.id)}')">
             <i data-lucide="more-vertical" class="w-3.5 h-3.5 pointer-events-none"></i>
           </button>
         </div>
@@ -269,7 +269,7 @@ function openCardMenu(event, id) {
     };
   }
 
-  lucide.createIcons();
+  if (typeof lucide !== "undefined") lucide.createIcons();
 
   // Position anchored menu with viewport awareness & dynamic transform-origin
   menu.classList.remove('hidden');

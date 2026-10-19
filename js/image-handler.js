@@ -127,7 +127,7 @@ function showImagePreview(src) {
   applyCropStyles();
   initCropEditor();
   updateMockOverlayText();
-  lucide.createIcons();
+  if (typeof lucide !== "undefined") lucide.createIcons();
 }
 
 function changeImage() {
@@ -153,7 +153,7 @@ function removeImagePreview() {
   if (uploadSection) uploadSection.classList.remove('hidden');
 
   resetFramingControls();
-  lucide.createIcons();
+  if (typeof lucide !== "undefined") lucide.createIcons();
 }
 
 // ---- Direct Manipulation Crop Engine ----

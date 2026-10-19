@@ -138,9 +138,12 @@ function subscribeToUserFirestore(uid) {
     });
 
     if (cloudWishlist.length > 0 || !snapshot.empty) {
-      window.wishlist = cloudWishlist;
-      if (window.saveWishlistToIDB) window.saveWishlistToIDB(cloudWishlist);
-      else localStorage.setItem('hokvault-data', JSON.stringify(cloudWishlist));
+      const clean = typeof sanitizeItem === "function"
+        ? cloudWishlist.map(sanitizeItem)
+        : cloudWishlist;
+      window.wishlist = clean;
+      if (window.saveWishlistToIDB) window.saveWishlistToIDB(clean);
+      else localStorage.setItem('hokvault-data', JSON.stringify(clean));
 
       if (window.renderItems) window.renderItems();
       if (window.updateStats) window.updateStats();

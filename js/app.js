@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadData();
   spawnParticles();
   setupDragDrop();
-  lucide.createIcons();
+  if (typeof lucide !== "undefined") lucide.createIcons();
 });
 
 // ---- Keyboard Shortcuts ----
