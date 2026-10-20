@@ -93,12 +93,16 @@ function saveItem(event) {
   const imagePosY = posYEl ? parseInt(posYEl.value) : 15;
   const imagePosX = posXEl ? parseInt(posXEl.value) : 50;
 
-  // Determine image source
+  // Determine image source — allowlist the scheme so javascript:/data:text/html
+  // URLs can never be stored (defense-in-depth; <img src> ignores them today,
+  // but the value must stay inert if ever reused in another context).
   let image = '';
   if (uploadedImageData) {
     image = uploadedImageData;
   } else {
-    image = document.getElementById('form-image').value.trim();
+    image = typeof sanitizeImageUrl === 'function'
+      ? sanitizeImageUrl(document.getElementById('form-image').value)
+      : document.getElementById('form-image').value.trim();
   }
 
   if (!hero) {

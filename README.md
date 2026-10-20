@@ -27,6 +27,7 @@ Pelacak wishlist skin **Honor of Kings** dalam browser: kartu koleksi berbingkai
 **Data & sinkronisasi**
 - Penyimpanan lokal: IndexedDB (`HoKVaultDB`) dengan fallback localStorage — data tetap milikmu, di perangkatmu
 - Sinkronisasi cloud **opsional** via Firebase (Firestore + Google sign-in) untuk akses lintas perangkat
+- Aturan keamanan Firestore ada di [`firestore.rules`](firestore.rules): user yang login hanya bisa baca/tulis subtree `users/{uid}` miliknya sendiri. Tempelkan isi file itu ke Firebase console (Firestore Database > Rules) — tidak di-deploy otomatis oleh repo ini.
 
 ## Menjalankan secara lokal
 

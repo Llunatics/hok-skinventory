@@ -8,6 +8,24 @@ function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 }
 
+// Allowlist for user-supplied image URLs. Only schemes that are inert in an
+// <img> context are accepted; javascript:/data:text/html/vbscript: URLs are
+// rejected even though <img src> ignores them today, so a stored value can
+// never become executable if the URL is ever reused in another context
+// (e.g. <a href>, window.open). Returns '' for anything not allowlisted.
+function sanitizeImageUrl(url) {
+  const s = String(url || '').trim();
+  if (!s) return '';
+  const lower = s.toLowerCase();
+  if (/^https?:\/\//i.test(s)) return s.slice(0, 2000);
+  if (/^data:image\//i.test(s)) return s.slice(0, 2000);
+  if (/^blob:/i.test(s)) return s.slice(0, 2000);
+  // protocol-relative and site-relative paths stay on this origin
+  if (/^\/\//.test(s)) return 'https:' + s.slice(0, 2000);
+  if (/^\//.test(s) && !/^\/\//.test(s)) return s.slice(0, 2000);
+  return '';
+}
+
 // Sanitize an item object coming from untrusted sources (JSON import,
 // cloud sync). Prevents stored-XSS via crafted id/rarity/status values that
 // are interpolated into HTML attributes and inline handlers at render time.
@@ -26,7 +44,7 @@ function sanitizeItem(raw) {
     rarity: pick(r.rarity, Object.keys(RARITIES), 'epic'),
     priority: pick(r.priority, Object.keys(PRIORITIES), 'medium'),
     status: pick(r.status, Object.keys(STATUSES), 'available'),
-    image: String(r.image || '').slice(0, 2000),
+    image: sanitizeImageUrl(r.image),
     imageScale: Math.min(300, Math.max(10, num(r.imageScale, 100))),
     imagePosX: Math.min(100, Math.max(0, num(r.imagePosX, 50))),
     imagePosY: Math.min(100, Math.max(0, num(posY, 15))),
