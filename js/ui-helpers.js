@@ -16,9 +16,12 @@ function generateId() {
 function sanitizeImageUrl(url) {
   const s = String(url || '').trim();
   if (!s) return '';
-  const lower = s.toLowerCase();
+  // Uploaded photos live in this field as data:image URLs (canvas WebP,
+  // routinely hundreds of KB). They must NEVER be truncated to URL length:
+  // a 2.000-char cut silently corrupts every uploaded artwork the next
+  // time cloud sync round-trips the item (bug found 2026-11-11).
+  if (/^data:image\//i.test(s)) return s.slice(0, 8000000);
   if (/^https?:\/\//i.test(s)) return s.slice(0, 2000);
-  if (/^data:image\//i.test(s)) return s.slice(0, 2000);
   if (/^blob:/i.test(s)) return s.slice(0, 2000);
   // protocol-relative and site-relative paths stay on this origin
   if (/^\/\//.test(s)) return 'https:' + s.slice(0, 2000);

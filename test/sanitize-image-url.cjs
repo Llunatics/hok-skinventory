@@ -50,5 +50,13 @@ check("sanitizeItem falls back rarity", evil.rarity === "epic");
 const okItem = sanitizeItem({ id: "a1", image: "https://example.com/a.jpg" });
 check("sanitizeItem keeps https image", okItem.image === "https://example.com/a.jpg");
 
+// regression 2026-11-11: uploaded photos are long data:image URLs and must
+// survive sanitizing intact — a 2.000-char truncation corrupted every
+// uploaded artwork on cloud-sync round-trip.
+const longDataUrl = "data:image/webp;base64," + "A".repeat(500000);
+check("long data:image URL kept intact", sanitizeImageUrl(longDataUrl) === longDataUrl);
+const photoItem = sanitizeItem({ id: "a2", image: longDataUrl });
+check("sanitizeItem keeps long data:image intact", photoItem.image === longDataUrl);
+
 console.log(`sanitize-image-url: ${pass}/${pass + fail} PASS`);
 process.exit(fail ? 1 : 0);
