@@ -62,6 +62,7 @@ function initFirebase() {
       }
     }).catch((err) => {
       console.warn("Mobile redirect auth error:", err);
+      if (window.showToast) window.showToast(authErrorMessage(err), 'error');
     });
 
     // Listen to Auth State Changes
@@ -209,6 +210,22 @@ export async function pushWishlistToCloud() {
   }
 }
 
+// Pesan error login yang ramah (jangan tampilkan mentahan Firebase ke user).
+function authErrorMessage(err) {
+  const code = (err && err.code) || '';
+  if (code === 'auth/permission-denied-on-the-service')
+    return 'Login gagal: domain ini belum diizinkan di pengaturan API key Firebase. Coba login lewat hok-skinventory.vercel.app, atau tambahkan domain ini di Google Cloud Console.';
+  if (code === 'auth/unauthorized-domain')
+    return 'Login gagal: domain ini belum diizinkan di Firebase Console (Authentication > Settings > Authorized domains).';
+  if (code === 'auth/popup-blocked' || code === 'auth/popup-closed-by-user')
+    return 'Popup login diblokir atau tertutup. Izinkan popup lalu coba lagi.';
+  if (code === 'auth/network-request-failed')
+    return 'Login gagal: tidak ada koneksi. Periksa jaringan lalu coba lagi.';
+  if (code === 'auth/operation-not-allowed')
+    return 'Login Google belum diaktifkan di Firebase Console (Authentication > Sign-in method).';
+  return 'Login Google gagal. Coba lagi.';
+}
+
 // Login Google (Supports Popup & Fallback Redirect)
 export async function loginGoogle() {
   if (!auth || !googleProvider) {
@@ -228,7 +245,7 @@ export async function loginGoogle() {
       await signInWithRedirect(auth, googleProvider);
     } catch (redirectErr) {
       console.error("Redirect login gagal:", redirectErr);
-      if (window.showToast) window.showToast('Login Google gagal: ' + (redirectErr.message || ''), 'error');
+      if (window.showToast) window.showToast(authErrorMessage(redirectErr), 'error');
     }
   }
 }
