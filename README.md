@@ -17,6 +17,7 @@ Pelacak wishlist skin **Honor of Kings** dalam browser: kartu koleksi berbingkai
 - Modal detail kaca (glass) per skin: gambar besar, harga, status kepemilikan, catatan, tanggal ditambahkan
 - Menu konteks per kartu (klik kanan): ubah, hapus, toggle owned
 - Tema gelap / terang
+- Motion polish (glide pill, count-up stat, tilt kartu, slide-to-confirm Hapus Semua, modal enter/exit) di `js/motion.js` — desain asli dipertahankan, hanya gerakan yang dihaluskan; kartu tanpa gambar memakai monogram huruf hero
 
 **Studio gambar**
 - Upload atau tempel URL gambar, lalu crop langsung di browser: geser, zoom (scale), dan pratinjau live di mockup kartu sebelum disimpan

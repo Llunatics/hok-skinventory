@@ -150,22 +150,22 @@
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 lg:gap-4 flex-shrink-0">
           <div class="glass-stat">
             <div class="stat-icon-wrap stat-icon-1"><i data-lucide="scroll-text" class="w-5 h-5"></i></div>
-            <div class="stat-number" id="stat-total">0</div>
+            <div class="stat-number" id="stat-total"><span class="stat-anim" aria-hidden="true">0</span><span class="sr-only stat-final">0</span></div>
             <div class="stat-label">Total Skin</div>
           </div>
           <div class="glass-stat">
             <div class="stat-icon-wrap stat-icon-2"><i data-lucide="coins" class="w-5 h-5"></i></div>
-            <div class="stat-number stat-num-2" id="stat-value">0</div>
+            <div class="stat-number stat-num-2" id="stat-value"><span class="stat-anim" aria-hidden="true">0</span><span class="sr-only stat-final">0</span></div>
             <div class="stat-label">Total Token</div>
           </div>
           <div class="glass-stat">
             <div class="stat-icon-wrap stat-icon-3"><i data-lucide="shield-check" class="w-5 h-5"></i></div>
-            <div class="stat-number stat-num-3" id="stat-owned">0</div>
+            <div class="stat-number stat-num-3" id="stat-owned"><span class="stat-anim" aria-hidden="true">0</span><span class="sr-only stat-final">0</span></div>
             <div class="stat-label">Sudah Dimiliki</div>
           </div>
           <div class="glass-stat">
             <div class="stat-icon-wrap stat-icon-4"><i data-lucide="flame" class="w-5 h-5"></i></div>
-            <div class="stat-number stat-num-4" id="stat-progress">0%</div>
+            <div class="stat-number stat-num-4" id="stat-progress"><span class="stat-anim" aria-hidden="true">0%</span><span class="sr-only stat-final">0%</span></div>
             <div class="stat-label">Progres</div>
             <div class="progress-track">
               <div id="progress-bar" class="progress-fill"></div>
@@ -244,7 +244,7 @@
       </div>
 
       <!-- Mobile Tabs -->
-      <div class="flex md:hidden gap-2 mb-5 overflow-x-auto pb-1 -mx-1 px-1 no-scrollbar">
+      <div class="mobile-tabs flex md:hidden gap-2 mb-5 overflow-x-clip pb-1 -mx-1 px-1 no-scrollbar">
         <button id="m-all" class="mobile-tab active" onclick="setFilter('all')"><i data-lucide="layers"
             class="w-3.5 h-3.5"></i> Semua</button>
         <button id="m-wishlist" class="mobile-tab" onclick="setFilter('active')"><i data-lucide="heart"
@@ -649,6 +649,16 @@
         <button class="glass-btn-ghost flex-1" onclick="closeConfirm()">Batal</button>
         <button class="glass-btn-danger flex-1" id="confirm-btn" onclick="confirmAction()">Hapus</button>
       </div>
+      <!-- Bencho SlideConfirm — HANYA untuk Hapus Semua (diaktifkan JS). -->
+      <div id="slide-confirm-wrap" class="slide-confirm hidden mt-6">
+        <div class="slide-confirm-track">
+          <div class="slide-confirm-fill"></div>
+          <span class="slide-confirm-label">Geser untuk hapus semua</span>
+          <div class="slide-confirm-handle" role="button" tabindex="0" aria-label="Geser untuk menghapus semua">
+            <i data-lucide="chevrons-right" class="w-5 h-5"></i>
+          </div>
+        </div>
+      </div>
     </div>
     <form method="dialog" class="modal-backdrop"><button>close</button></form>
   </dialog>
@@ -753,6 +763,7 @@
   <script src="js/render.js"></script>
   <script src="js/crud.js"></script>
   <script src="js/modals.js"></script>
+  <script src="js/motion.js"></script>
   <script src="js/app.js"></script>
   <script type="module" src="firebase-sync.js"></script>
 </body>

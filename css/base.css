@@ -12,6 +12,24 @@
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
+/* Overflow guardrail (R3): clip, bukan hidden, supaya position: sticky tetap jalan */
+html, body {
+  overflow-x: clip;
+}
+
+/* Visually hidden (untuk salinan akhir angka count-up) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 
 /* ───────────── BODY & SCROLLBAR ───────────── */
 

@@ -4,6 +4,9 @@
 // ═══════════════════════════════════════════════════════
 
 // ---- Scroll Lock Helpers ----
+// SlideConfirm instance untuk "Hapus Semua" (dibuat ulang tiap buka modal).
+let clearAllSlide = null;
+
 function lockBodyScroll() {
   document.body.classList.add('modal-open');
 }
@@ -28,7 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
 // ---- Item Modal (Add / Edit) ----
 function closeModal() {
   const modal = document.getElementById('item-modal');
-  if (modal) modal.close();
+  if (modal) {
+    // Exit 180ms EASE_OUT (beUI MorphingModal); reduced motion → langsung.
+    if (window.Motion) Motion.closeDialogAnimated(modal);
+    else modal.close();
+  }
   uploadedImageData = null;
   unlockBodyScroll();
 }
@@ -42,6 +49,9 @@ function openDetail(id) {
   const rar = RARITIES[item.rarity] || RARITIES.epic;
   const pri = PRIORITIES[item.priority] || PRIORITIES.medium;
   const status = STATUSES[item.status] || STATUSES.available;
+
+  // Monogram placeholder (R3): huruf pertama nama hero, bukan ikon bintang.
+  const mono = (((item.hero || '').trim().charAt(0)) || '?').toUpperCase();
 
   const modal = document.getElementById('detail-modal');
   const imgEl = document.getElementById('detail-image');
@@ -149,6 +159,10 @@ function openDetail(id) {
   const posY = item.imagePosY !== undefined ? item.imagePosY : (item.imagePos !== undefined ? item.imagePos : 15);
 
   if (item.image && item.image.trim()) {
+    // Monogram disiapkan di muka: bila gambar gagal dimuat, placeholder
+    // fallback menampilkan huruf hero, bukan ikon bintang.
+    if (placeholderIcon) placeholderIcon.textContent = mono;
+    if (placeholderLabel) placeholderLabel.textContent = rar.label;
     if (imgEl) {
       imgEl.src = item.image;
       imgEl.alt = item.name || item.hero;
@@ -166,7 +180,7 @@ function openDetail(id) {
     if (imgEl) imgEl.classList.add('hidden');
     if (placeholderEl) {
       placeholderEl.classList.remove('hidden');
-      if (placeholderIcon) placeholderIcon.textContent = rar.icon;
+      if (placeholderIcon) placeholderIcon.textContent = mono;
       if (placeholderLabel) placeholderLabel.textContent = rar.label;
     }
   }
@@ -207,7 +221,10 @@ function openDetail(id) {
 
 function closeDetail() {
   const modal = document.getElementById('detail-modal');
-  if (modal) modal.close();
+  if (modal) {
+    if (window.Motion) Motion.closeDialogAnimated(modal);
+    else modal.close();
+  }
   unlockBodyScroll();
 }
 
@@ -222,14 +239,16 @@ function editFromDetail() {
   if (!currentDetailId) return;
   const id = currentDetailId;
   closeDetail();
-  editItem(id);
+  // Tunggu exit animation selesai (0ms bila reduced motion) sebelum
+  // membuka modal lain — jangan tumpuk dua dialog.
+  setTimeout(() => editItem(id), window.Motion ? Motion.exitMs() : 0);
 }
 
 function deleteFromDetail() {
   if (!currentDetailId) return;
   const id = currentDetailId;
   closeDetail();
-  confirmDelete(id);
+  setTimeout(() => confirmDelete(id), window.Motion ? Motion.exitMs() : 0);
 }
 
 // ---- Confirm Modal ----
@@ -240,10 +259,17 @@ function confirmDelete(id) {
   const titleEl = document.getElementById('confirm-title');
   const msgEl = document.getElementById('confirm-message');
   const btnEl = document.getElementById('confirm-btn');
+  const slideWrap = document.getElementById('slide-confirm-wrap');
 
   if (titleEl) titleEl.textContent = 'Hapus Skin?';
   if (msgEl) msgEl.textContent = `"${item.hero} — ${item.name || item.hero}" akan dihapus dari inventory.`;
-  if (btnEl) btnEl.textContent = 'Hapus';
+  // Hapus SATU skin tetap pakai tombol konfirmasi biasa (bukan slide).
+  if (btnEl) {
+    btnEl.textContent = 'Hapus';
+    btnEl.classList.remove('hidden');
+  }
+  if (slideWrap) slideWrap.classList.add('hidden');
+  if (clearAllSlide) clearAllSlide.reset();
 
   pendingConfirmAction = () => deleteItem(id);
   const confirmModal = document.getElementById('confirm-modal');
@@ -261,6 +287,7 @@ function confirmClearAll() {
   const titleEl = document.getElementById('confirm-title');
   const msgEl = document.getElementById('confirm-message');
   const btnEl = document.getElementById('confirm-btn');
+  const slideWrap = document.getElementById('slide-confirm-wrap');
 
   if (titleEl) titleEl.textContent = 'Hapus Semua Data?';
   if (msgEl) msgEl.textContent = `Semua ${wishlist.length} skin akan dihapus permanen dari inventory.`;
@@ -272,6 +299,27 @@ function confirmClearAll() {
     renderItems();
     showToast('Semua data berhasil dihapus', 'warning');
   };
+
+  // Bencho SlideConfirm — HANYA untuk Hapus Semua. Reduced motion →
+  // tombol biasa (slide-confirm jadi tombol biasa).
+  const useSlide = !!(window.Motion && !Motion.reduced() && slideWrap);
+  if (btnEl) btnEl.classList.toggle('hidden', useSlide);
+  if (slideWrap) {
+    slideWrap.classList.toggle('hidden', !useSlide);
+    if (useSlide) {
+      if (clearAllSlide) clearAllSlide.destroy();
+      clearAllSlide = Motion.createSlideConfirm(slideWrap, {
+        onCommit: () => {
+          if (pendingConfirmAction) {
+            pendingConfirmAction();
+            pendingConfirmAction = null;
+          }
+          closeConfirm();
+        },
+      });
+    }
+  }
+
   const confirmModal = document.getElementById('confirm-modal');
   if (confirmModal) {
     confirmModal.showModal();
@@ -289,7 +337,11 @@ function confirmAction() {
 
 function closeConfirm() {
   const confirmModal = document.getElementById('confirm-modal');
-  if (confirmModal) confirmModal.close();
+  if (confirmModal) {
+    if (window.Motion) Motion.closeDialogAnimated(confirmModal);
+    else confirmModal.close();
+  }
+  if (clearAllSlide) clearAllSlide.reset();
   pendingConfirmAction = null;
   unlockBodyScroll();
 }

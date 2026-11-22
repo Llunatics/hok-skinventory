@@ -4,17 +4,31 @@
    Restrained Motion · No White Glow · Fast & Subtle
    ═══════════════════════════════════════════════════════════════ */
 
-/* ───────────── PRESS ACTIVE PHYSICS ───────────── */
+/* ───────────── PRESS PHYSICS (Arc: 0.97 tombol, 0.96 ikon) ───────────── */
 
 .glass-btn-primary:active,
 .glass-btn-ghost:active,
 .glass-btn-danger:active,
-.glass-btn-icon:active,
 .nav-pill:active,
 .mobile-tab:active,
-.scheme-btn:active {
-  transform: scale(0.96) !important;
-  transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+.scheme-btn:active,
+.layout-btn:active,
+.img-tab:active {
+  transform: scale(0.97);
+  transition: transform var(--dur-press) var(--ease-out);
+}
+
+.glass-btn-icon:active,
+.card-menu-trigger:active,
+.crop-zoom-btn:active,
+.glass-spinner-btn:active {
+  transform: scale(0.96);
+  transition: transform var(--dur-press) var(--ease-out);
+}
+
+/* Elemen yang menambatkan popover/menu JANGAN scale — jawab dengan warna */
+.card-menu-trigger[aria-haspopup="true"]:active {
+  transform: none;
 }
 
 
@@ -122,6 +136,30 @@ input[type="range"],
 .progress-fill,
 .confetti-piece,
 .particle,
-.orb {
+.orb,
+.glide-pill,
+.slide-confirm-handle,
+.slide-confirm-fill,
+.slide-confirm-label,
+.tilt-shade {
   transition-property: all;
+}
+
+
+/* ───────────── REDUCED MOTION ───────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  /* Yang tersisa: fade opacity singkat */
+  .glass-modal,
+  .card-context-menu,
+  .glass-toast {
+    transition: opacity 0.15s ease !important;
+  }
 }

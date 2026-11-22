@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   setGridColumns(currentGridCols);
   await loadData();
   spawnParticles();
+  if (window.Motion) Motion.init();
   setupDragDrop();
   if (typeof lucide !== "undefined") lucide.createIcons();
 });

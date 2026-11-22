@@ -53,6 +53,22 @@
 
 /* ───────────── NAV PILLS (SEGMENTED CONTROL) ───────────── */
 
+/* Arc glide pill — satu pill absolut yang meluncur mengikuti tombol
+   aktif (spring 250ms EASE_OUT, diukur JS). Latar pill = var(--accent)
+   (emas asli), tombol aktif dibuat transparan supaya pill yang terlihat. */
+.glide-pill {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 0;
+  width: 0;
+  border-radius: var(--radius-full);
+  background: var(--accent);
+  transition: transform 250ms var(--ease-out), width 250ms var(--ease-out);
+  pointer-events: none;
+  z-index: 0;
+}
+
 .nav-pill-container {
   position: relative;
   background: var(--input-bg);
@@ -62,6 +78,7 @@
   display: flex;
   align-items: center;
   gap: 2px;
+  overflow-x: clip;
 }
 
 .nav-pill {
@@ -73,12 +90,13 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: color 0.25s ease, background-color 0.25s ease;
   cursor: pointer;
   border: none;
   background: none;
   white-space: nowrap;
   position: relative;
+  z-index: 1;
 }
 
 .nav-pill:hover {
@@ -88,8 +106,8 @@
 
 .nav-pill.active {
   color: var(--accent-text-on);
-  background: var(--accent);
-  box-shadow: var(--accent-glow);
+  background: transparent;
+  box-shadow: none;
 }
 
 
@@ -453,6 +471,7 @@ input[type="number"].glass-input::-webkit-inner-spin-button {
 /* ───────────── IMAGE UPLOAD & TABS ───────────── */
 
 .image-input-tabs {
+  position: relative;
   display: flex;
   gap: 3px;
   margin-bottom: 10px;
@@ -460,10 +479,16 @@ input[type="number"].glass-input::-webkit-inner-spin-button {
   border-radius: var(--radius-md);
   padding: 3px;
   border: 1px solid var(--glass-border);
+  overflow-x: clip;
+}
+
+.image-input-tabs .glide-pill {
+  border-radius: var(--radius-sm);
 }
 
 .img-tab {
   flex: 1;
+  min-width: 0;
   padding: 7px 14px;
   border-radius: var(--radius-sm);
   font-size: 12px;
@@ -472,14 +497,16 @@ input[type="number"].glass-input::-webkit-inner-spin-button {
   background: transparent;
   border: none;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: color 0.2s ease, background-color 0.2s ease;
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
 .img-tab.active {
   color: var(--accent-text-on);
-  background: var(--accent);
-  box-shadow: var(--accent-glow);
+  background: transparent;
+  box-shadow: none;
 }
 
 .img-tab:hover:not(.active) {
@@ -826,7 +853,18 @@ input[type="number"].glass-input::-webkit-inner-spin-button {
 }
 
 
-/* ───────────── MOBILE TABS ───────────── */
+/* ───────────── MOBILE TABS (glide pill) ───────────── */
+
+.mobile-tabs {
+  position: relative;
+  overflow-x: clip;
+}
+
+.mobile-tabs .glide-pill {
+  top: 0;
+  bottom: 0;
+  border-radius: var(--radius-md);
+}
 
 .mobile-tab {
   display: inline-flex;
@@ -840,8 +878,11 @@ input[type="number"].glass-input::-webkit-inner-spin-button {
   background: var(--input-bg);
   border: 1px solid var(--glass-border);
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: color 0.25s ease, background-color 0.25s ease, border-color 0.25s ease;
   white-space: nowrap;
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
 }
 
 .mobile-tab:hover {
@@ -851,9 +892,9 @@ input[type="number"].glass-input::-webkit-inner-spin-button {
 
 .mobile-tab.active {
   color: var(--accent-text-on);
-  background: var(--accent);
-  border-color: var(--accent);
-  box-shadow: var(--accent-glow);
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
 }
 
 
@@ -905,6 +946,10 @@ input[type="number"].glass-input::-webkit-inner-spin-button {
   position: relative;
 }
 
+.layout-switcher-bar .glide-pill {
+  border-radius: var(--radius-sm);
+}
+
 .layout-btn {
   display: inline-flex;
   align-items: center;
@@ -920,8 +965,10 @@ input[type="number"].glass-input::-webkit-inner-spin-button {
   background: transparent;
   border: none;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: color 0.2s ease, background-color 0.2s ease;
   white-space: nowrap;
+  position: relative;
+  z-index: 1;
 }
 
 .layout-btn:hover {
@@ -931,9 +978,9 @@ input[type="number"].glass-input::-webkit-inner-spin-button {
 
 .layout-btn.active {
   color: var(--accent-text-on);
-  background: var(--accent);
+  background: transparent;
   font-weight: 600;
-  box-shadow: var(--accent-glow);
+  box-shadow: none;
 }
 
 /* Minimalist Liquid Range Slider */
@@ -961,7 +1008,7 @@ input[type="range"].liquid-slider::-webkit-slider-thumb {
   outline: none !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   cursor: pointer;
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.2s var(--ease-out);
 }
 
 input[type="range"].liquid-slider::-webkit-slider-thumb:hover {
@@ -981,7 +1028,7 @@ input[type="range"].liquid-slider::-moz-range-thumb {
   outline: none !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   cursor: pointer;
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.2s var(--ease-out);
 }
 
 input[type="range"].liquid-slider::-moz-range-thumb:hover {

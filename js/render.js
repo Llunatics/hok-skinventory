@@ -101,7 +101,7 @@ function renderItems() {
   updateStats();
 }
 
-function renderCard(item) {
+function renderCard(item, index) {
   const rar = RARITIES[item.rarity] || RARITIES.epic;
   const pri = PRIORITIES[item.priority] || PRIORITIES.medium;
   const status = STATUSES[item.status] || STATUSES.available;
@@ -113,18 +113,28 @@ function renderCard(item) {
   const posY = item.imagePosY !== undefined ? item.imagePosY : (item.imagePos !== undefined ? item.imagePos : 15);
   const imgStyle = `object-position: ${posX}% ${posY}%; transform: scale(${scale}); transform-origin: ${posX}% ${posY}%;`;
 
+  // Monogram placeholder (R3): huruf pertama nama hero — ganti ikon
+  // bintang/sparkle yang dinilai alay.
+  const mono = escapeHtml((((item.hero || '').trim().charAt(0)) || '?').toUpperCase());
+
+  // Entrance tenang: fade + naik 8px, 240ms, stagger max 0.02s/item,
+  // total < 0.4 detik (delay di-cap 160ms, lewat kelas d0–d8).
+  const enterStep = Math.min(Math.floor((index || 0)), 8);
+
   return `
-    <div class="skin-card ${ownedCls}" data-rarity="${escapeHtml(item.rarity)}" tabindex="0" role="button" aria-label="Detail skin ${escapeHtml(item.hero)} - ${escapeHtml(item.name || item.hero)}" onclick="openDetail('${escapeHtml(item.id)}')" onkeydown="if(event.key==='Enter'||event.key===' '){if(!event.target.closest('.card-menu-trigger')){event.preventDefault();openDetail('${escapeHtml(item.id)}');}}">
+    <div class="skin-card ${ownedCls} card-enter card-enter-d${enterStep}" data-rarity="${escapeHtml(item.rarity)}" tabindex="0" role="button" aria-label="Detail skin ${escapeHtml(item.hero)} - ${escapeHtml(item.name || item.hero)}" onclick="openDetail('${escapeHtml(item.id)}')" onkeydown="if(event.key==='Enter'||event.key===' '){if(!event.target.closest('.card-menu-trigger')){event.preventDefault();openDetail('${escapeHtml(item.id)}');}}">
       ${item.owned ? '<div class="owned-badge"><i data-lucide="check" class="w-3 h-3"></i> Dimiliki</div>' : ''}
+
+      <div class="tilt-shade" aria-hidden="true"></div>
 
       ${hasImg ? `
         <div class="skin-card-img">
           <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name || item.hero)}" loading="lazy" style="${imgStyle}"
-               onerror="this.closest('.skin-card-img').outerHTML='<div class=\\'skin-card-placeholder\\' data-r=\\'${escapeHtml(item.rarity)}\\'><span class=\\'skin-card-placeholder-icon\\'>${rar.icon}</span></div>'" />
+               onerror="this.closest('.skin-card-img').outerHTML='<div class=\\'skin-card-placeholder\\' data-r=\\'${escapeHtml(item.rarity)}\\'><span class=\\'skin-card-placeholder-mono\\' aria-hidden=\\'true\\'>${mono}</span></div>'" />
         </div>
       ` : `
         <div class="skin-card-placeholder" data-r="${escapeHtml(item.rarity)}">
-          <span class="skin-card-placeholder-icon">${rar.icon}</span>
+          <span class="skin-card-placeholder-mono" aria-hidden="true">${mono}</span>
         </div>
       `}
 
@@ -140,17 +150,18 @@ function renderCard(item) {
               ${item.price ? `<span class="skin-card-price">${formatPrice(item.price)} <span class="price-unit">Token</span></span>` : ''}
             </div>
           </div>
-
-          <!-- Options Menu Trigger Button (Liquid Glass) -->
-          <button type="button" class="card-menu-trigger"
-                  title="Menu Opsi Skin"
-                  aria-label="Menu opsi skin"
-                  aria-haspopup="true"
-                  onclick="openCardMenu(event, '${escapeHtml(item.id)}')">
-            <i data-lucide="more-vertical" class="w-3.5 h-3.5 pointer-events-none"></i>
-          </button>
         </div>
       </div>
+
+      <!-- Options Menu Trigger Button (Liquid Glass) — sudut kiri atas
+           poster (R3): di baris body ia menimpa badge rarity. -->
+      <button type="button" class="card-menu-trigger"
+              title="Menu Opsi Skin"
+              aria-label="Menu opsi skin"
+              aria-haspopup="true"
+              onclick="openCardMenu(event, '${escapeHtml(item.id)}')">
+        <i data-lucide="more-vertical" class="w-3.5 h-3.5 pointer-events-none"></i>
+      </button>
     </div>
   `;
 }
@@ -278,16 +289,27 @@ window.addEventListener('scroll', () => {
   closeCardMenu();
 }, true);
 
-// ---- Stats ----
+// ---- Stats (beUI AnimatedNumber: count-up dari nilai sebelumnya) ----
 function updateStats() {
   const total = wishlist.length;
   const owned = wishlist.filter(i => i.owned).length;
   const totalVal = wishlist.reduce((s, i) => s + (i.price || 0), 0);
   const progress = total > 0 ? Math.round((owned / total) * 100) : 0;
 
-  document.getElementById('stat-total').textContent = total;
-  document.getElementById('stat-value').textContent = formatPrice(totalVal);
-  document.getElementById('stat-owned').textContent = owned;
-  document.getElementById('stat-progress').textContent = progress + '%';
+  const fmtInt = (window.Motion && Motion.fmtInt) || ((n) => Math.round(n).toLocaleString('id-ID'));
+  const fmtPct = (window.Motion && Motion.fmtPct) || ((n) => Math.round(n) + '%');
+
+  const setStat = (id, value, fmt) => {
+    const wrap = document.getElementById(id);
+    if (!wrap) return;
+    const animEl = wrap.querySelector('.stat-anim');
+    const finalEl = wrap.querySelector('.stat-final');
+    if (window.Motion && animEl) Motion.animateNumber(animEl, finalEl, value, fmt);
+    else wrap.textContent = fmt(value);
+  };
+  setStat('stat-total', total, fmtInt);
+  setStat('stat-value', totalVal, fmtInt);
+  setStat('stat-owned', owned, fmtInt);
+  setStat('stat-progress', progress, fmtPct);
   document.getElementById('progress-bar').style.width = progress + '%';
 }

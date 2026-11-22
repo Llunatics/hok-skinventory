@@ -52,18 +52,43 @@ dialog.modal::backdrop {
 }
 
 dialog.modal[open] .glass-modal {
-  animation: modalPopIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: modalPopIn 240ms var(--ease-out) both;
 }
 
 @keyframes modalPopIn {
   0% {
     opacity: 0;
-    transform: scale(0.95) translateY(12px);
+    transform: translateY(20px) scale(0.97);
   }
   100% {
     opacity: 1;
-    transform: scale(1) translateY(0);
+    transform: translateY(0) scale(1);
   }
+}
+
+/* Exit: 180ms EASE_OUT opacity + y (dipasang JS sebelum .close()) */
+dialog.modal.modal-closing .glass-modal {
+  animation: modalPopOut 180ms var(--ease-out) both;
+}
+
+dialog.modal.modal-closing::backdrop {
+  animation: backdropFadeOut 180ms ease both;
+}
+
+@keyframes modalPopOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+}
+
+@keyframes backdropFadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 /* Wide Workspace Modal for Add/Edit Skin and Detail */
@@ -298,6 +323,13 @@ dialog.modal[open] .glass-modal {
   transition: box-shadow 0.35s ease;
 }
 
+/* Monogram placeholder detail (R3): huruf hero weight 600, muted —
+   bukan ikon bintang. Ukuran huruf dari class text-6xl di markup. */
+#detail-placeholder-icon {
+  font-weight: 600;
+  color: var(--text-tertiary);
+}
+
 .detail-btn-owned {
   background: rgba(16, 185, 129, 0.12) !important;
   color: #10b981 !important;
@@ -388,6 +420,80 @@ dialog.modal[open] .glass-modal {
     opacity: 0;
     transform: translateX(60px) scale(0.95);
   }
+}
+
+
+/* ───────────── BENCHO SLIDE-CONFIRM (Hapus Semua saja) ───────────── */
+
+.slide-confirm {
+  margin-top: 6px;
+}
+
+.slide-confirm-track {
+  position: relative;
+  height: 56px;
+  border-radius: var(--radius-full);
+  background: var(--input-bg);
+  border: 1px solid var(--glass-border);
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+}
+
+.slide-confirm-track:active {
+  cursor: grabbing;
+}
+
+.slide-confirm-fill {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: 48px;
+  border-radius: var(--radius-full);
+  background: rgba(239, 68, 68, 0.16);
+  pointer-events: none;
+}
+
+.slide-confirm-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.slide-confirm-handle {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  background: var(--danger);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+  will-change: transform, width;
+}
+
+.slide-confirm-handle svg {
+  width: 20px;
+  height: 20px;
+}
+
+.slide-confirm.committed .slide-confirm-track {
+  border-color: rgba(239, 68, 68, 0.4);
 }
 
 

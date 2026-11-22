@@ -121,11 +121,18 @@
 .skin-card-placeholder[data-r="treasure_flawless"]::before { background: linear-gradient(135deg, #f59e0b, #06b6d4); }
 .skin-card-placeholder[data-r="mythic"]::before { background: linear-gradient(135deg, #ef4444, #b91c1c); }
 
-.skin-card-placeholder-icon {
-  font-size: clamp(1.8rem, 10cqi, 2.5rem);
+/* Monogram placeholder (R3): huruf pertama nama hero, besar, muted,
+   weight 600 — menggantikan ikon bintang/sparkle/diamond yang dinilai
+   alay. Permukaan tetap bernuansa rarity lewat ::before (gradien halus). */
+.skin-card-placeholder-mono {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(2.2rem, 18cqi, 3.4rem);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--text-tertiary);
   position: relative;
   z-index: 1;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+  user-select: none;
 }
 
 /* ───────────── CARD BODY (LAYERED OVER ARTWORK) ───────────── */
@@ -199,7 +206,13 @@
 
 /* ───────────── THREE-DOT CARD ACTION BUTTON ───────────── */
 
+/* R3: tombol ⋮ pindah ke sudut kiri atas poster (bukan lagi di baris body)
+   — di body ia menimpa badge rarity pada kartu sempit. Sudut kanan atas
+   ditempati badge Dimiliki, jadi kiri atas yang bebas. */
 .skin-card .card-menu-trigger {
+  position: absolute;
+  top: 10px;
+  left: 10px;
   width: clamp(26px, 11cqi, 32px);
   height: clamp(26px, 11cqi, 32px);
   border-radius: 9999px;
@@ -215,7 +228,6 @@
   justify-content: center;
   padding: 0;
   cursor: pointer;
-  position: relative;
   z-index: 25;
   flex-shrink: 0;
 }
@@ -238,6 +250,13 @@
     min-width: 38px;
     min-height: 38px;
   }
+}
+
+/* List mode: trigger kembali jadi flex item di ujung baris kartu
+   (kartu list adalah flex-row; absolute di sudut akan mengambang). */
+#items-grid[data-layout="list"] .skin-card .card-menu-trigger {
+  position: static;
+  margin-left: 12px;
 }
 
 /* ───────────── OWNED STATE (SUBTLE & REFINED) ───────────── */
@@ -277,6 +296,29 @@
 }
 
 /* ───────────── REFINED BADGES (LOW SATURATION, GLASS) ───────────── */
+
+/* R3: kartu sempit — badge Dimiliki jadi ikon-only agar tidak menimpa
+   tombol ⋮ di sudut berlawanan. Kartu 4 kolom di HP ~85px: badge teks
+   (~70px) + trigger (38px) + offset 2×10px = ~128px > lebar kartu.
+   Ambang 135px menutupi juga 3 kolom HP (~115px). Ikon centang tetap
+   terlihat; teks "Dimiliki" kembali utuh di kartu yang lebih lebar. */
+@container (max-width: 135px) {
+  .skin-card .owned-badge {
+    font-size: 0;
+    gap: 0;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    justify-content: center;
+    right: 6px;
+  }
+  /* Offset ikut merapat (10px → 6px): pada kartu ~80px, trigger 38px +
+     badge 24px + offset 2×10px = 82px > lebar kartu (sisa overlap 2px).
+     Dengan 6px: 38 + 24 + 12 = 74px — ada celah 6px. */
+  .skin-card .card-menu-trigger {
+    left: 6px;
+  }
+}
 
 .rarity-badge {
   display: inline-flex;
@@ -514,3 +556,39 @@
 .skin-card:nth-child(6) { animation-delay: 0.12s; }
 .skin-card:nth-child(7) { animation-delay: 0.14s; }
 .skin-card:nth-child(8) { animation-delay: 0.16s; }
+
+/* ───────────── CARD ENTER (R3 — ganti cardReveal: 240ms, naik 8px) ───────────── */
+
+@keyframes cardEnter {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.skin-card.card-enter {
+  /* backwards saja (bukan both): setelah entrance selesai, fill forwards
+     akan menimpa transform inline tilt — jadi jangan pakai forwards. */
+  animation: cardEnter 240ms var(--ease-out) backwards;
+}
+
+/* Stagger via kelas (bukan inline style — test XSS mem-whitelist atribut
+   kartu; style inline akan terdeteksi "extra attr"). 0–160ms, langkah 20ms. */
+.skin-card.card-enter-d0 { animation-delay: 0ms; }
+.skin-card.card-enter-d1 { animation-delay: 20ms; }
+.skin-card.card-enter-d2 { animation-delay: 40ms; }
+.skin-card.card-enter-d3 { animation-delay: 60ms; }
+.skin-card.card-enter-d4 { animation-delay: 80ms; }
+.skin-card.card-enter-d5 { animation-delay: 100ms; }
+.skin-card.card-enter-d6 { animation-delay: 120ms; }
+.skin-card.card-enter-d7 { animation-delay: 140ms; }
+.skin-card.card-enter-d8 { animation-delay: 160ms; }
+
+/* ───────────── BENCHO TILT — DENT/RIM OVERLAY (MONOKROM) ───────────── */
+
+.tilt-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  border-radius: inherit;
+  background-repeat: no-repeat;
+}
